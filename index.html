@@ -529,23 +529,44 @@
       </div>
     </div>
 
-    <!-- 搜尋浮窗 (Search overlay) -->
-    <div class="search-overlay">
-      <div class="search-header">
-        <div class="search-input-box">
-          <!-- Search icon in overlay (inline SVG) -->
-          <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-btn">
-            <circle cx="232" cy="232" r="136" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
-            <line x1="336" y1="336" x2="448" y2="448" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <input type="text" placeholder="搜尋地點 / 店名 / 服務" />
-        </div>
-        <div class="search-close">取消</div>
-      </div>
-      <div class="search-body" style="padding-bottom: 120px;">
-        <!-- (search results content) -->
+   <!-- ✅ 搜尋浮窗（底部淡入＋Chip可點＋支援複選） -->
+<div class="search-overlay" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-radius: 20px 20px 0 0; box-shadow: 0 -4px 16px rgba(0,0,0,0.1); z-index: 999; padding: 20px 16px 30px; max-width: 420px; margin: auto;">
+  <div class="search-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+    <div class="search-input-box" style="flex: 1; display: flex; align-items: center; background: #f6f6f6; border-radius: 999px; padding: 10px 14px; margin-right: 12px;">
+      <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-btn" style="width: 16px; margin-right: 6px; opacity: 0.6;">
+        <circle cx="232" cy="232" r="136" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="336" y1="336" x2="448" y2="448" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <input type="text" placeholder="搜尋地點 / 店名 / 服務" style="border: none; outline: none; background: transparent; font-size: 15px; width: 100%;" />
+    </div>
+    <div class="search-close" style="font-size: 15px; color: #666; cursor: pointer;">取消</div>
+  </div>
+
+  <div class="search-body">
+    <div class="section" style="margin-bottom: 20px;">
+      <div class="section-title" style="font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 10px;">熱門地區</div>
+      <div class="chip-group">
+        <span class="chip">台北市</span>
+        <span class="chip">新北市</span>
+        <span class="chip">桃園</span>
+        <span class="chip">台中</span>
+        <span class="chip">台南</span>
+        <span class="chip">高雄</span>
       </div>
     </div>
+    <div class="section">
+      <div class="section-title" style="font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 10px;">服務分類</div>
+      <div class="chip-group">
+        <span class="chip">美甲</span>
+        <span class="chip">美睫</span>
+        <span class="chip">美容</span>
+        <span class="chip">紋繡</span>
+        <span class="chip">美體</span>
+      </div>
+    </div>
+    <button class="apply-btn" style="margin-top: 20px;">套用篩選</button>
+  </div>
+</div>
   </div>
 
   <script>
