@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tint Maps 完整首頁</title>
+
+  <!-- ✅ PWA & iOS fullscreen settings (unchanged) -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="apple-touch-icon" href="./img/icon_192.png" />
+
+  <style>
+    /* 🎨 Define theme color variables (Soft Pink Pastels) */
+    :root {
+      --bg: #FFF0F5;         /* Background base color */
+      --primary: #F5A6CD;    /* Primary color for icons/buttons */
+      --hover: #D08DAE;      /* Hover state color */
+      --text: #4A4A4A;       /* Text color (dark gray) */
+      --border: #f7d7e5;     /* Border color (light pink) */
+      --tag-bg: #fce5ee;     /* Tag/Chip background (soft pink) */
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Noto Sans TC', sans-serif;
+      background-color: var(--bg);   /* Updated app background color */
+      color: var(--text);           /* Default text color (dark gray) */
+    }
+
+    /* 🧾 Base container with white background and pink border */
+    .wrapper {
+      padding-top: 70px;     /* reserve space for top search bar */
+      padding-bottom: 60px;  /* reserve space for bottom nav */
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background-color: #fff;
+      border: 1px solid var(--border);      /* Added pink border */
+      box-shadow: 0 0 40px rgba(0,0,0,0.05);
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      padding: 16px;
+      background: #fff;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .search-box {
+      flex: 1;
+      background: #fff;
+      border-radius: 999px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);   /* Pink border for search box */
+      cursor: pointer;
+    }
+    /* Adjust search icon style (inline SVG) */
+    .search-box svg {
+      width: 18px;
+      margin-right: 8px;
+      opacity: 0.6;
+    }
+
+    .filter-icon {
+      /* Filter/locate button uses primary color background */
+      background: var(--primary);
+      border-radius: 999px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      padding: 10px;
+      margin-left: 12px;
+      cursor: pointer;
+    }
+    /* (If any filter icon SVG is used, it would inherit currentColor for its strokes) */
+
+    .map {
+      position: relative;
+      flex: 1;
+      margin-top: 70px;
+    }
+    .dot {
+      position: absolute;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .dot.small {
+      width: 12px; height: 12px;
+      background: #f6a1a1;
+    }
+    .dot.active {
+      width: 26px; height: 26px;
+      background: #ec5c5c;
+      box-shadow: 0 0 10px rgba(255, 100, 100, 0.5);
+    }
+    .map-overlay {
+      position: fixed;
+      top: 0; bottom: 0; left: 0; right: 0;
+      z-index: 900;
+      display: none;
+    }
+
+    .store-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px 20px;
+      position: fixed;
+      bottom: 70px;
+      left: 16px; right: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);   /* Added light pink border around card */
+      z-index: 901;
+    }
+    .store-card h2 {
+      font-size: 18px;
+      margin: 0 0 6px;
+      color: var(--text);   /* Unified text color */
+    }
+    .store-card .info {
+      font-size: 14px;
+      color: var(--text);   /* Unified text color */
+      margin-bottom: 4px;
+    }
+    .store-card .distance {
+      font-size: 13px;
+      color: var(--text);   /* Unified text color (was #999) */
+    }
+    .tags {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .tags span {
+      background: var(--tag-bg);    /* Soft pink background for tags */
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--text);          /* Tag text in dark gray */
+    }
+
+    /* 📱 Bottom navigation bar: white background, pink border, inline SVG icons */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 60px;
+      background: #fff;
+      border-top: 1px solid var(--border);  /* Pink top border */
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+      color: var(--primary);       /* Default icon color (primary pink) */
+    }
+    .bottom-nav svg {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      transition: color 0.3s;
+      /* Icons use currentColor for strokes/fills, so they inherit .bottom-nav color */
+    }
+    .bottom-nav svg:hover {
+      color: var(--hover);         /* Hover state: change icon color to hover pink */
+    }
+
+    .search-overlay, .favorite-view, .menu-overlay {
+      position: fixed;
+      top: 0; bottom: 0; left: 0; right: 0;
+      background: #fff;
+      z-index: 998;
+      padding: 24px 16px;
+      overflow-y: auto;
+      display: none;
+    }
+    .search-header, .favorite-header, .menu-header {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .chip {
+      background: var(--primary);   /* Filter chips use primary color */
+      color: #fff;                 /* Chip text in white for contrast */
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .chip:hover {
+      background: var(--hover);    /* Chip hover uses hover color */
+    }
+    .apply-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);  /* Primary color background for apply button */
+      color: #fff;
+      font-size: 15px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .apply-btn:hover {
+      background: var(--hover);    /* Hover state for apply button */
+    }
+    .menu-btn {
+      padding: 14px;
+      font-size: 15px;
+      border: 1px solid var(--border);  /* Pink border for menu buttons */
+      border-radius: 12px;
+      background: #fff;                /* White background for menu items */
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    .menu-btn:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    .expanded-card {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      left: 16px; right: 16px;
+      z-index: 902;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      padding: 20px;
+      max-width: 420px;
+      margin: auto;
+    }
+    .card-header img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+    }
+    .icon-btn {
+      /* (No changes here if not used; replaced by inline SVGs) */
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .fav-card {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .fav-card img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-right: 12px;
+    }
+    .fav-card .info h3 {
+      margin: 0 0 4px;
+      font-size: 16px;
+      color: var(--text);
+    }
+    .fav-card .info p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="top-bar">
+      <div class="search-box">
+        <!-- 🔍 Search icon (inline SVG) -->
+        <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="232" cy="232" r="136" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="336" y1="336" x2="448" y2="448" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>搜尋地點 / 店名 / 服務</span>
+      </div>
+      <!-- 🧭 Removed top-right locate button (moved to bottom nav) 
+      <div class="filter-icon" id="locate-btn">
+        <img src="./img/icon_location.png" />
+      </div>
+      -->
+    </div>
+
+    <div class="map" id="map"></div>
+    <div class="map-overlay"></div>
+
+    <div class="store-card" data-id="store2">
+      <h2>time nailart 好時質甲</h2>
+      <div class="info">美甲 / 美睫・預約制</div>
+      <div class="distance">0.5 公里・台北市中山區</div>
+      <div class="tags">
+        <span>預約 / 美睫</span>
+        <span>預約制</span>
+        <span>0.5 公里</span>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <!-- 📱 Bottom nav 5 inline SVG icons: Search, GPS, Home, Favorite, Menu -->
+      <!-- Search icon -->
+      <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="232" cy="232" r="136" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="336" y1="336" x2="448" y2="448" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <!-- GPS (Locate) icon -->
+      <svg id="locate-btn" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="256" y1="96" x2="256" y2="56" stroke="currentColor" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="256" y1="456" x2="256" y2="416" stroke="currentColor" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="416" y1="256" x2="456" y2="256" stroke="currentColor" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="56" y1="256" x2="96" y2="256" stroke="currentColor" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="256" cy="256" r="144" stroke="currentColor" stroke-width="32" fill="none" stroke-miterlimit="10"/>
+      </svg>
+      <!-- Home icon -->
+      <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M80 212V448a16 16 0 0 0 16 16h96V328a24 24 0 0 1 24-24h80a24 24 0 0 1 24 24V464h96a16 16 0 0 0 16-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
+        <path d="M480 256L266.89 52c-5 5.28-16.69 5.34-21.78 0L32 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
+        <polyline points="400 179 400 64 352 64 352 133" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
+      </svg>
+      <!-- Favorite (Heart) icon -->
+      <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M352.92 80C288 80 256 144 256 144s-32-64-96.92-64C106.32 80 64.54 124.14 64 176.81c-1.1 109.33 86.73 187.08 183 252.42a16 16 0 0 0 18 0c96.26-65.34 184.09-143.09 183-252.42C447.46 124.14 405.68 80 352.92 80Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
+      </svg>
+      <!-- Menu (Hamburger) icon -->
+      <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="96" y1="160" x2="416" y2="160" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
+        <line x1="96" y1="256" x2="416" y2="256" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
+        <line x1="96" y1="352" x2="416" y2="352" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
+      </svg>
+    </div>
+
+    <!-- 展開版卡片 UI (expanded store card) -->
+    <div class="expanded-card">
+      <div class="card-header">
+        <img src="./img/sample_photo.jpg" alt="店家圖片">
+      </div>
+      <div class="card-body">
+        <h2 class="store-name">time nailart 好時質甲</h2>
+        <div class="tags">美甲 / 美睫・預約制</div>
+        <div class="address">台北市中山區．0.5 公里</div>
+        <div class="description">
+          店家簡介文字，這裡可以放 2~3 行介紹內容。<br>
+          例如：溫馨舒適空間 / 經驗豐富技師 / 價格透明 / 高評價店家。
+        </div>
+        <div class="action-buttons">
+          <!-- 💬 LINE contact button (inline SVG icon) -->
+          <a href="#" class="btn line">
+            <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M87.49 380c1.19-4.38-1.44-10.47-3.95-14.86A44.86 44.86 0 0 0 81 361.34a199.81 199.81 0 0 1-33-110C47.65 139.09 140.73 48 255.83 48 356.21 48 440 117.54 459.58 209.85A199 199 0 0 1 464 251.49c0 112.41-89.49 204.93-204.59 204.93-18.3 0-43-4.6-56.47-8.37s-26.92-8.77-30.39-10.11a31.09 31.09 0 0 0-11.12-2.07 30.71 30.71 0 0 0-12.09 2.43L81.51 462.78A16 16 0 0 1 76.84 464a9.6 9.6 0 0 1-9.57-9.74 15.85 15.85 0 0 1 .6-3.29Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32"/>
+            </svg>
+          </a>
+          <!-- 📸 Instagram button (inline SVG icon) -->
+          <a href="#" class="btn ig">
+            <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M350.54 148.68l-26.62-42.06C318.31 100.08 310.62 96 302 96H210c-8.62 0-16.31 4.08-21.92 10.62l-26.62 42.06C155.85 155.23 148.62 160 140 160H80a32 32 0 0 0-32 32V384a32 32 0 0 0 32 32H432a32 32 0 0 0 32-32V192a32 32 0 0 0-32-32H373c-8.65 0-16.85-4.77-22.46-11.32Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
+              <circle cx="256" cy="272" r="80" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" fill="none"/>
+              <polyline points="124 158 124 136 100 136 100 158" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
+            </svg>
+          </a>
+          <!-- 📍 Navigation button (inline SVG icon) -->
+          <a href="#" class="btn nav">
+            <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g transform="rotate(45 256 256)">
+                <polyline points="112 244 256 100 400 244" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48"/>
+                <line x1="256" y1="120" x2="256" y2="412" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48"/>
+              </g>
+            </svg>
+          </a>
+          <!-- 📅 Reservation (Book) button (inline SVG icon) -->
+          <a href="#" class="btn book">
+            <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="48" y="80" width="416" height="384" rx="48" stroke="currentColor" stroke-linejoin="round" stroke-width="32" fill="none"/>
+              <line x1="128" y1="48" x2="128" y2="80" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
+              <line x1="384" y1="48" x2="384" y2="80" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
+              <line x1="464" y1="160" x2="48" y2="160" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/>
+              <polyline points="140 300 256 380 420 300" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 收藏頁 (Favorites view) -->
+    <div class="favorite-view">
+      <div class="favorite-header">我的收藏</div>
+      <div class="favorite-list">
+        <div class="fav-card">
+          <img src="./img/sample_photo.jpg" alt="收藏店家圖片">
+          <div class="info">
+            <h3>Rose Beauty</h3>
+            <p>美甲 / 美睫・預約制</p>
+          </div>
+        </div>
+        <div class="fav-card">
+          <img src="./img/sample_photo.jpg" alt="收藏店家圖片">
+          <div class="info">
+            <h3>Jin Beauty</h3>
+            <p>美體 / 按摩・現場可接</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 漢堡選單浮窗 (Menu overlay) -->
+    <div class="menu-overlay">
+      <div class="menu-header">功能選單</div>
+      <div class="menu-options">
+        <button class="menu-btn">店家上架</button>
+        <button class="menu-btn">店家上架</button>
+        <button class="menu-btn">店家上架</button>
+        <button class="menu-btn">店家上架</button>
+      </div>
+    </div>
+
+    <!-- 搜尋浮窗 (Search overlay) -->
+    <div class="search-overlay">
+      <div class="search-header">
+        <div class="search-input-box">
+          <!-- Search icon in overlay (inline SVG) -->
+          <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-btn">
+            <circle cx="232" cy="232" r="136" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="336" y1="336" x2="448" y2="448" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <input type="text" placeholder="搜尋地點 / 店名 / 服務" />
+        </div>
+        <div class="search-close">取消</div>
+      </div>
+      <div class="search-body" style="padding-bottom: 120px;">
+        <!-- (search results content) -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.onload = () => {
+      const storeCard = document.querySelector(".store-card");
+      const expandedCard = document.querySelector(".expanded-card");
+      const mapOverlay = document.querySelector(".map-overlay");
+
+      const favoriteView = document.querySelector(".favorite-view");
+      const menuOverlay = document.querySelector(".menu-overlay");
+      const searchOverlay = document.querySelector(".search-overlay");
+
+      /* 🔄 Update selectors for bottom nav icons (now SVGs) */
+      const searchBtn = document.querySelector(".bottom-nav svg:nth-child(1)");
+      const heartBtn = document.querySelector(".bottom-nav svg:nth-child(4)");
+      const menuBtn = document.querySelector(".bottom-nav svg:nth-child(5)");
+      const homeBtn = document.querySelector(".bottom-nav svg:nth-child(3)");
+      const locateBtn = document.getElementById("locate-btn");  // GPS locate (bottom second icon)
+
+      const searchBox = document.querySelector(".search-box");
+      const searchClose = document.querySelector(".search-close");
+
+      // ✅ Function to activate red dot on map when card is expanded
+      function activateDot(storeId) {
+        document.querySelectorAll(".dot").forEach(dot => {
+          dot.classList.remove("active");
+        });
+        const target = document.querySelector(`.dot[data-id="${storeId}"]`);
+        if (target) target.classList.add("active");
+      }
+
+      // 點小卡片 → 展開大卡 (tap on small card to expand)
+      storeCard.addEventListener("click", () => {
+        expandedCard.style.display = "block";
+        expandedCard.classList.add("card-animate"); // ✅ apply animation class
+        storeCard.style.display = "none";
+        mapOverlay.style.display = "block";
+        favoriteView.style.display = "none";
+        menuOverlay.style.display = "none";
+        searchOverlay.style.display = "none";
+
+        const storeId = storeCard.getAttribute("data-id");
+        activateDot(storeId);
+      });
+
+      // ✅ Swipe down on expanded card to close it
+      let startY = 0;
+      let isDragging = false;
+      expandedCard.addEventListener("touchstart", (e) => {
+        startY = e.touches[0].clientY;
+        isDragging = true;
+      });
+      expandedCard.addEventListener("touchmove", (e) => {
+        if (!isDragging) return;
+        const diffY = e.touches[0].clientY - startY;
+        if (diffY > 60) {
+          expandedCard.style.display = "none";
+          expandedCard.classList.remove("card-animate"); // ✅ remove animation class
+          storeCard.style.display = "block";
+          mapOverlay.style.display = "none";
+          isDragging = false;
+        }
+      });
+      expandedCard.addEventListener("touchend", () => { isDragging = false; });
+
+      // ✅ Swipe up on small card to expand (with animation)
+      let cardStartY = 0;
+      let cardDragging = false;
+      storeCard.addEventListener("touchstart", (e) => {
+        cardStartY = e.touches[0].clientY;
+        cardDragging = true;
+      });
+      storeCard.addEventListener("touchmove", (e) => {
+        if (!cardDragging) return;
+        const diffY = e.touches[0].clientY - cardStartY;
+        if (diffY < -60) {
+          expandedCard.style.display = "block";
+          expandedCard.classList.add("card-animate"); // ✅ add animation
+          storeCard.style.display = "none";
+          mapOverlay.style.display = "block";
+          cardDragging = false;
+        }
+      });
+      storeCard.addEventListener("touchend", () => { cardDragging = false; });
+
+      // ❤️ Click heart (favorites icon) → show favorites page
+      heartBtn.addEventListener("click", () => {
+        favoriteView.style.display = "block";
+        expandedCard.style.display = "none";
+        storeCard.style.display = "block";
+        mapOverlay.style.display = "none";
+        menuOverlay.style.display = "none";
+        searchOverlay.style.display = "none";
+      });
+
+      // ☰ Click menu (hamburger icon) → show menu overlay
+      menuBtn.addEventListener("click", () => {
+        menuOverlay.style.display = "block";
+        expandedCard.style.display = "none";
+        storeCard.style.display = "block";
+        mapOverlay.style.display = "none";
+        favoriteView.style.display = "none";
+        searchOverlay.style.display = "none";
+      });
+
+      // 🏠 Click home icon → return to main map view
+      homeBtn.addEventListener("click", () => {
+        expandedCard.style.display = "none";
+        storeCard.style.display = "block";
+        mapOverlay.style.display = "none";
+        favoriteView.style.display = "none";
+        menuOverlay.style.display = "none";
+        searchOverlay.style.display = "none";
+      });
+
+      // 🔍 Click bottom search icon (same as tapping search bar) → open search overlay
+      searchBtn.addEventListener("click", () => {
+        searchOverlay.style.display = "block";
+        expandedCard.style.display = "none";
+        storeCard.style.display = "block";
+        mapOverlay.style.display = "none";
+        favoriteView.style.display = "none";
+        menuOverlay.style.display = "none";
+      });
+
+      // 點搜尋欄 (top search box) → 顯示搜尋浮窗
+      searchBox.addEventListener("click", () => {
+        searchOverlay.style.display = "block";
+        expandedCard.style.display = "none";
+        storeCard.style.display = "block";
+        mapOverlay.style.display = "none";
+        favoriteView.style.display = "none";
+        menuOverlay.style.display = "none";
+      });
+
+      // 點取消 → 關閉搜尋浮窗
+      searchClose.addEventListener("click", () => {
+        searchOverlay.style.display = "none";
+      });
+
+      // ✅ 定位按鈕邏輯 (click GPS locate icon, now at bottom nav)
+      if (locateBtn) {
+        locateBtn.addEventListener("click", () => {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+              const userLatLng = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              };
+              if (window.map) {
+                window.map.setCenter(userLatLng);
+                new google.maps.Marker({
+                  position: userLatLng,
+                  map: window.map,
+                  icon: {
+                    url: "./img/icon_map.svg",                // ✅ map marker icon (remains external)
+                    scaledSize: new google.maps.Size(32, 32), // ✅ scaled to appropriate size
+                  },
+                  title: "你的位置",
+                });
+              } else {
+                alert("地圖尚未初始化，無法定位");
+              }
+            }, () => {
+              alert("無法取得你的位置，請確認裝置權限");
+            });
+          } else {
+            alert("此裝置不支援定位功能");
+          }
+        });
+      }
+    };
+  </script>
+
+  <!-- ✅ Initialize Google Map -->
+  <script>
+    function initMap() {
+      const center = { lat: 25.034, lng: 121.564 };
+      window.map = new google.maps.Map(document.getElementById("map"), {
+        center,
+        zoom: 15,
+        disableDefaultUI: true
+      });
+    }
+  </script>
+  <!-- ✅ Load Google Maps API and trigger initMap -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLCB3EKFwsIqPwEEL_hxL7zluVpnzcCNM&callback=initMap"></script>
+</body>
+</html>
