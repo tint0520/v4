@@ -181,15 +181,28 @@
       color: var(--hover);         /* Hover state: change icon color to hover pink */
     }
 
-    .search-overlay, .favorite-view, .menu-overlay {
-      position: fixed;
-      top: 0; bottom: 0; left: 0; right: 0;
-      background: #fff;
-      z-index: 998;
-      padding: 24px 16px;
-      overflow-y: auto;
-      display: none;
-    }
+  .search-overlay {
+  position: fixed;
+  top: 0; bottom: 0; left: 0; right: 0;
+  background: rgba(255, 255, 255, 0.7);     /* ✅ 半透明 */
+  backdrop-filter: blur(14px);             /* ✅ 毛玻璃效果 */
+  -webkit-backdrop-filter: blur(14px);     /* ✅ Safari 支援 */
+  z-index: 998;
+  padding: 24px 16px;
+  overflow-y: auto;
+  display: none;
+}
+
+.favorite-view,
+.menu-overlay {
+  position: fixed;
+  top: 0; bottom: 0; left: 0; right: 0;
+  background: #fff;
+  z-index: 998;
+  padding: 24px 16px;
+  overflow-y: auto;
+  display: none;
+}
     .search-header, .favorite-header, .menu-header {
       font-size: 20px;
       font-weight: bold;
