@@ -360,7 +360,58 @@
 
     <div class="map" id="map"></div>
     <div class="map-overlay"></div>
+<!-- ✅ 展開卡片（.expanded-card） -->
+<div class="expanded-card" data-id="store2">
+  <div class="card-header">
+    <img src="./img/sample_photo.jpg" alt="店家圖片">
+  </div>
+  <h2>time nailart 好時質甲</h2>
+  <div class="info">美甲 / 美睫・預約制</div>
+  <div class="distance">0.5 公里・台北市中山區</div>
+  <div class="tags">
+    <span>預約 / 美睫</span>
+    <span>預約制</span>
+    <span>0.5 公里</span>
+  </div>
+  <div class="action-buttons">
+    <!-- 💬 LINE -->
+    <a href="#" class="btn line">
+      <svg viewBox="0 0 512 512" class="icon-svg">
+        <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
+        <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle"
+              fill="white" font-size="110" font-family="Arial, sans-serif" font-weight="bold">LINE</text>
+      </svg>
+    </a>
 
+    <!-- 📸 Instagram -->
+    <a href="#" class="btn ig">
+      <svg viewBox="0 0 512 512" class="icon-svg">
+        <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
+        <path d="M349.33,69.33H162.67A93.34,93.34,0,0,0,69.33,162.67v186.66A93.34,93.34,0,0,0,162.67,442.67h186.66A93.34,93.34,0,0,0,442.67,349.33V162.67A93.34,93.34,0,0,0,349.33,69.33ZM256,352a96,96,0,1,1,96-96A96.11,96.11,0,0,1,256,352Zm106.67-170.67a21.33,21.33,0,1,1,21.33-21.33A21.34,21.34,0,0,1,362.67,181.33Z"
+          stroke="white" stroke-width="20" fill="none"/>
+      </svg>
+    </a>
+
+    <!-- 📍 Navigation -->
+    <a href="#" class="btn nav">
+      <svg viewBox="0 0 512 512" class="icon-svg">
+        <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
+        <polyline points="160 352 352 160" stroke="white" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <polygon points="160 352 272 288 224 240 160 352" fill="white"/>
+      </svg>
+    </a>
+
+    <!-- 📅 預約 -->
+    <a href="#" class="btn book">
+      <svg viewBox="0 0 512 512" class="icon-svg">
+        <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
+        <rect x="128" y="160" width="256" height="192" rx="16" fill="none" stroke="white" stroke-width="20"/>
+        <line x1="128" y1="200" x2="384" y2="200" stroke="white" stroke-width="20"/>
+        <line x1="192" y1="256" x2="320" y2="256" stroke="white" stroke-width="20"/>
+      </svg>
+    </a>
+  </div>
+</div>
     <div class="store-card" data-id="store2">
       <h2>time nailart 好時質甲</h2>
       <div class="info">美甲 / 美睫・預約制</div>
@@ -372,7 +423,7 @@
       </div>
     </div>
 
-    <div class="bottom-nav">
+    div class="bottom-nav">
       <!-- 📱 Bottom nav 5 inline SVG icons: Search, GPS, Home, Favorite, Menu -->
       <!-- Search icon -->
       <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
