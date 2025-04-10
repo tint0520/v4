@@ -639,10 +639,14 @@
                 new google.maps.Marker({
                   position: userLatLng,
                   map: window.map,
-                  icon: {
-                    url: "./img/icon_map.svg",                // ✅ map marker icon (remains external)
-                    scaledSize: new google.maps.Size(32, 32), // ✅ scaled to appropriate size
-                  },
+                 icon: {
+  path: google.maps.SymbolPath.CIRCLE,
+  scale: 10,
+  fillColor: "#F5A6CD",     // 主題粉紅
+  fillOpacity: 1,
+  strokeWeight: 1,
+  strokeColor: "#D08DAE"    // hover 粉邊
+},
                   title: "你的位置",
                 });
               } else {
