@@ -88,10 +88,13 @@
     /* (If any filter icon SVG is used, it would inherit currentColor for its strokes) */
 
     .map {
-      position: relative;
-      flex: 1;
-      margin-top: 70px;
-    }
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+}
     .dot {
       position: absolute;
       border-radius: 50%;
