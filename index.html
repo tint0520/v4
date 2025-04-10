@@ -87,12 +87,14 @@
     }
     /* (If any filter icon SVG is used, it would inherit currentColor for its strokes) */
 
-  #map {
-   position: fixed; /* ✅ 改成固定位置，不跟隨內容滑動 */
+#map {
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
+  height: 100vh;
+  width: 100%;
   z-index: 0;
 }
     .dot {
