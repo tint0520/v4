@@ -286,6 +286,38 @@
       font-size: 14px;
       color: var(--text);
     }
+/* ✅ 卡片內按鈕 hover 動畫效果 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background-color: var(--primary);
+  transition: all 0.3s ease;
+}
+.btn:hover {
+  transform: scale(1.08);
+  filter: brightness(1.1);
+}
+
+/* 各按鈕 hover 背景亮化（可自訂粉色變化） */
+.btn.line:hover {
+  background-color: #ffd8b0; /* 淡橘粉（LINE） */
+}
+.btn.ig:hover {
+  background-color: #f9c7e5; /* 柔粉（IG） */
+}
+.btn.nav:hover {
+  background-color: #ffccd6; /* 粉紅（導航） */
+}
+.btn.book:hover {
+  background-color: #f5b8d1; /* 桃粉（預約） */
+}
+
+
+    
   </style>
 </head>
 <body>
