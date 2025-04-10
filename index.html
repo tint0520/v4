@@ -315,7 +315,25 @@
 .btn.book:hover {
   background-color: #f5b8d1; /* 桃粉（預約） */
 }
-
+/* ✅ 卡片四顆 icon 樣式 - inline SVG 圓底白線風格 */
+.btn {
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 6px;
+  border-radius: 50%;
+  background: none;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+.icon-svg {
+  width: 48px;
+  height: 48px;
+}
 
     
   </style>
@@ -385,56 +403,44 @@
       </svg>
     </div>
 
-    <!-- 展開版卡片 UI (expanded store card) -->
-    <div class="expanded-card">
-      <div class="card-header">
-        <img src="./img/sample_photo.jpg" alt="店家圖片">
-      </div>
-      <div class="card-body">
-        <h2 class="store-name">time nailart 好時質甲</h2>
-        <div class="tags">美甲 / 美睫・預約制</div>
-        <div class="address">台北市中山區．0.5 公里</div>
-        <div class="description">
-          店家簡介文字，這裡可以放 2~3 行介紹內容。<br>
-          例如：溫馨舒適空間 / 經驗豐富技師 / 價格透明 / 高評價店家。
-        </div>
-        <div class="action-buttons">
-          <!-- 💬 LINE contact button (inline SVG icon) -->
-          <a href="#" class="btn line">
-            <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M87.49 380c1.19-4.38-1.44-10.47-3.95-14.86A44.86 44.86 0 0 0 81 361.34a199.81 199.81 0 0 1-33-110C47.65 139.09 140.73 48 255.83 48 356.21 48 440 117.54 459.58 209.85A199 199 0 0 1 464 251.49c0 112.41-89.49 204.93-204.59 204.93-18.3 0-43-4.6-56.47-8.37s-26.92-8.77-30.39-10.11a31.09 31.09 0 0 0-11.12-2.07 30.71 30.71 0 0 0-12.09 2.43L81.51 462.78A16 16 0 0 1 76.84 464a9.6 9.6 0 0 1-9.57-9.74 15.85 15.85 0 0 1 .6-3.29Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32"/>
-            </svg>
-          </a>
-          <!-- 📸 Instagram button (inline SVG icon) -->
-          <a href="#" class="btn ig">
-            <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M350.54 148.68l-26.62-42.06C318.31 100.08 310.62 96 302 96H210c-8.62 0-16.31 4.08-21.92 10.62l-26.62 42.06C155.85 155.23 148.62 160 140 160H80a32 32 0 0 0-32 32V384a32 32 0 0 0 32 32H432a32 32 0 0 0 32-32V192a32 32 0 0 0-32-32H373c-8.65 0-16.85-4.77-22.46-11.32Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-              <circle cx="256" cy="272" r="80" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" fill="none"/>
-              <polyline points="124 158 124 136 100 136 100 158" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-            </svg>
-          </a>
-          <!-- 📍 Navigation button (inline SVG icon) -->
-          <a href="#" class="btn nav">
-            <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g transform="rotate(45 256 256)">
-                <polyline points="112 244 256 100 400 244" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48"/>
-                <line x1="256" y1="120" x2="256" y2="412" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48"/>
-              </g>
-            </svg>
-          </a>
-          <!-- 📅 Reservation (Book) button (inline SVG icon) -->
-          <a href="#" class="btn book">
-            <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="48" y="80" width="416" height="384" rx="48" stroke="currentColor" stroke-linejoin="round" stroke-width="32" fill="none"/>
-              <line x1="128" y1="48" x2="128" y2="80" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-              <line x1="384" y1="48" x2="384" y2="80" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-              <line x1="464" y1="160" x2="48" y2="160" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/>
-              <polyline points="140 300 256 380 420 300" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-    </div>
+   <div class="action-buttons">
+  <!-- 💬 LINE -->
+  <a href="#" class="btn line">
+    <svg viewBox="0 0 512 512" class="icon-svg">
+      <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
+      <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle"
+            fill="white" font-size="110" font-family="Arial, sans-serif" font-weight="bold">LINE</text>
+    </svg>
+  </a>
+
+  <!-- 📸 Instagram -->
+  <a href="#" class="btn ig">
+    <svg viewBox="0 0 512 512" class="icon-svg">
+      <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
+      <path d="M349.33,69.33H162.67A93.34,93.34,0,0,0,69.33,162.67v186.66A93.34,93.34,0,0,0,162.67,442.67h186.66A93.34,93.34,0,0,0,442.67,349.33V162.67A93.34,93.34,0,0,0,349.33,69.33ZM256,352a96,96,0,1,1,96-96A96.11,96.11,0,0,1,256,352Zm106.67-170.67a21.33,21.33,0,1,1,21.33-21.33A21.34,21.34,0,0,1,362.67,181.33Z"
+        stroke="white" stroke-width="20" fill="none"/>
+    </svg>
+  </a>
+
+  <!-- 📍 Navigation -->
+  <a href="#" class="btn nav">
+    <svg viewBox="0 0 512 512" class="icon-svg">
+      <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
+      <polyline points="160 352 352 160" stroke="white" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <polygon points="160 352 272 288 224 240 160 352" fill="white"/>
+    </svg>
+  </a>
+
+  <!-- 📅 預約 -->
+  <a href="#" class="btn book">
+    <svg viewBox="0 0 512 512" class="icon-svg">
+      <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
+      <rect x="128" y="160" width="256" height="192" rx="16" fill="none" stroke="white" stroke-width="20"/>
+      <line x1="128" y1="200" x2="384" y2="200" stroke="white" stroke-width="20"/>
+      <line x1="192" y1="256" x2="320" y2="256" stroke="white" stroke-width="20"/>
+    </svg>
+  </a>
+</div>
 
     <!-- 收藏頁 (Favorites view) -->
     <div class="favorite-view">
