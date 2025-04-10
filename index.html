@@ -181,16 +181,22 @@
       color: var(--hover);         /* Hover state: change icon color to hover pink */
     }
 
-  .search-overlay {
+.search-overlay {
   position: fixed;
-  top: 0; bottom: 0; left: 0; right: 0;
-  background: rgba(255, 255, 255, 0.7);     /* ✅ 半透明 */
-  backdrop-filter: blur(14px);             /* ✅ 毛玻璃效果 */
-  -webkit-backdrop-filter: blur(14px);     /* ✅ Safari 支援 */
+  top: 40px; /* ✅ 調整浮窗整體高度再上來 */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   z-index: 998;
-  padding: 24px 16px;
+  padding: 20px 16px 30px;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -6px 30px rgba(0,0,0,0.1);
+  max-width: 420px;
+  margin: auto;
   overflow-y: auto;
-  display: none;
 }
 
 .favorite-view,
@@ -206,7 +212,7 @@
     .search-header, .favorite-header, .menu-header {
       font-size: 20px;
       font-weight: bold;
-      margin-bottom: 20px;
+      margin-bottom:0px;
       color: var(--text);
     }
     .chip-group {
