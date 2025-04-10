@@ -494,87 +494,76 @@
   </div>
 
   <script>
-    window.onload = () => {
-      const storeCard = document.querySelector(".store-card");
-      const expandedCard = document.querySelector(".expanded-card");
-      const mapOverlay = document.querySelector(".map-overlay");
+   window.onload = () => {
+  const storeCard = document.querySelector(".store-card");
+  const expandedCard = document.querySelector(".expanded-card");
+  const mapOverlay = document.querySelector(".map-overlay");
 
-      const favoriteView = document.querySelector(".favorite-view");
-      const menuOverlay = document.querySelector(".menu-overlay");
-      const searchOverlay = document.querySelector(".search-overlay");
+  const favoriteView = document.querySelector(".favorite-view");
+  const menuOverlay = document.querySelector(".menu-overlay");
+  const searchOverlay = document.querySelector(".search-overlay");
 
-      /* 🔄 Update selectors for bottom nav icons (now SVGs) */
-      const searchBtn = document.querySelector(".bottom-nav svg:nth-child(1)");
-      const heartBtn = document.querySelector(".bottom-nav svg:nth-child(4)");
-      const menuBtn = document.querySelector(".bottom-nav svg:nth-child(5)");
-      const homeBtn = document.querySelector(".bottom-nav svg:nth-child(3)");
-      const locateBtn = document.getElementById("locate-btn");  // GPS locate (bottom second icon)
+  // 加入防呆判斷，避免報錯
+  if (storeCard && expandedCard && mapOverlay) {
+    // 點小卡片 → 展開大卡
+    storeCard.addEventListener("click", () => {
+      expandedCard.style.display = "block";
+      expandedCard.classList.add("card-animate");
+      storeCard.style.display = "none";
+      mapOverlay.style.display = "block";
 
-      const searchBox = document.querySelector(".search-box");
-      const searchClose = document.querySelector(".search-close");
+      favoriteView && (favoriteView.style.display = "none");
+      menuOverlay && (menuOverlay.style.display = "none");
+      searchOverlay && (searchOverlay.style.display = "none");
 
-      // ✅ Function to activate red dot on map when card is expanded
-      function activateDot(storeId) {
-        document.querySelectorAll(".dot").forEach(dot => {
-          dot.classList.remove("active");
-        });
-        const target = document.querySelector(`.dot[data-id="${storeId}"]`);
-        if (target) target.classList.add("active");
+      const storeId = storeCard.getAttribute("data-id");
+      activateDot(storeId);
+    });
+
+    // 展開卡片滑下收回
+    let startY = 0;
+    let isDragging = false;
+    expandedCard.addEventListener("touchstart", (e) => {
+      startY = e.touches[0].clientY;
+      isDragging = true;
+    });
+    expandedCard.addEventListener("touchmove", (e) => {
+      if (!isDragging) return;
+      const diffY = e.touches[0].clientY - startY;
+      if (diffY > 60) {
+        expandedCard.style.display = "none";
+        expandedCard.classList.remove("card-animate");
+        storeCard.style.display = "block";
+        mapOverlay.style.display = "none";
+        isDragging = false;
       }
+    });
+    expandedCard.addEventListener("touchend", () => {
+      isDragging = false;
+    });
 
-      // 點小卡片 → 展開大卡 (tap on small card to expand)
-      storeCard.addEventListener("click", () => {
+    // 小卡片上滑展開大卡
+    let cardStartY = 0;
+    let cardDragging = false;
+    storeCard.addEventListener("touchstart", (e) => {
+      cardStartY = e.touches[0].clientY;
+      cardDragging = true;
+    });
+    storeCard.addEventListener("touchmove", (e) => {
+      if (!cardDragging) return;
+      const diffY = e.touches[0].clientY - cardStartY;
+      if (diffY < -60) {
         expandedCard.style.display = "block";
-        expandedCard.classList.add("card-animate"); // ✅ apply animation class
+        expandedCard.classList.add("card-animate");
         storeCard.style.display = "none";
         mapOverlay.style.display = "block";
-        favoriteView.style.display = "none";
-        menuOverlay.style.display = "none";
-        searchOverlay.style.display = "none";
-
-        const storeId = storeCard.getAttribute("data-id");
-        activateDot(storeId);
-      });
-
-      // ✅ Swipe down on expanded card to close it
-      let startY = 0;
-      let isDragging = false;
-      expandedCard.addEventListener("touchstart", (e) => {
-        startY = e.touches[0].clientY;
-        isDragging = true;
-      });
-      expandedCard.addEventListener("touchmove", (e) => {
-        if (!isDragging) return;
-        const diffY = e.touches[0].clientY - startY;
-        if (diffY > 60) {
-          expandedCard.style.display = "none";
-          expandedCard.classList.remove("card-animate"); // ✅ remove animation class
-          storeCard.style.display = "block";
-          mapOverlay.style.display = "none";
-          isDragging = false;
-        }
-      });
-      expandedCard.addEventListener("touchend", () => { isDragging = false; });
-
-      // ✅ Swipe up on small card to expand (with animation)
-      let cardStartY = 0;
-      let cardDragging = false;
-      storeCard.addEventListener("touchstart", (e) => {
-        cardStartY = e.touches[0].clientY;
-        cardDragging = true;
-      });
-      storeCard.addEventListener("touchmove", (e) => {
-        if (!cardDragging) return;
-        const diffY = e.touches[0].clientY - cardStartY;
-        if (diffY < -60) {
-          expandedCard.style.display = "block";
-          expandedCard.classList.add("card-animate"); // ✅ add animation
-          storeCard.style.display = "none";
-          mapOverlay.style.display = "block";
-          cardDragging = false;
-        }
-      });
-      storeCard.addEventListener("touchend", () => { cardDragging = false; });
+        cardDragging = false;
+      }
+    });
+    storeCard.addEventListener("touchend", () => {
+      cardDragging = false;
+    });
+  }
 
       // ❤️ Click heart (favorites icon) → show favorites page
       heartBtn.addEventListener("click", () => {
