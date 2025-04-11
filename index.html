@@ -58,35 +58,34 @@
 
     /* 卡片、浮窗、展開卡片等容器設定 */
     .card-container {
-      position: absolute;
-      bottom: 100px;
-      left: 0;
-      right: 0;
-      z-index: 5;
-      display: flex;
-      justify-content: center;
-      overflow: hidden;
-      pointer-events: none;
-    }
-    .card-wrapper {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      padding: 0 20px;
-      scroll-snap-type: x mandatory;
-      pointer-events: all;
-    }
+  position: absolute;
+  bottom: 100px;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  overflow-x: auto;         /* ✅ 允許整個容器橫向滾動 */
+  -webkit-overflow-scrolling: touch;
+}
 
-    .store-card {
-      flex: 0 0 280px;
-      scroll-snap-align: center;
-      background: #fffdf9;
-      border-radius: 16px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-      padding: 16px;
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
+.card-wrapper {
+  display: flex;
+  gap: 12px;
+  padding: 0 20px;
+  min-width: max-content;   /* ✅ 確保寬度隨卡片變寬 */
+  scroll-snap-type: x mandatory;
+}
+
+   .store-card {
+  flex: 0 0 auto;         /* ✅ 不被壓縮，也不自動填滿 */
+  width: 280px;
+  scroll-snap-align: center;
+  background: #fffdf9;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  padding: 16px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
     .store-card .title {
       font-weight: 600;
       font-size: 16px;
