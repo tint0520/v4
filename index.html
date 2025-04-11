@@ -361,6 +361,28 @@
         });
         renderCards();
         updateCardUI(0);
+        // 🔁 滑動卡片時自動偵測對應卡片，並更新地圖中心與資料
+document.getElementById('cardWrapper').addEventListener('scroll', function () {
+  const wrapper = this;
+  const cards = wrapper.querySelectorAll('.store-card');
+  let minDistance = Infinity;
+  let closestIndex = 0;
+
+  cards.forEach((card, index) => {
+    const cardCenter = card.getBoundingClientRect().left + card.offsetWidth / 2;
+    const wrapperCenter = wrapper.getBoundingClientRect().left + wrapper.offsetWidth / 2;
+    const distance = Math.abs(cardCenter - wrapperCenter);
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestIndex = index;
+    }
+  });
+
+  // 若滑動到新卡片就更新地圖位置
+  if (closestIndex !== activeIndex) {
+    updateCardUI(closestIndex);
+  }
+});
       });
     }
 
