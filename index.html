@@ -417,6 +417,12 @@
         });
       }
     }
+    // DEBUG: 強制展開第一筆卡片來確認展開卡片是否有作用
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    updateCardUI(0, true);
+  }, 1000);
+});
   </script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLCB3EKFwsIqPwEEL_hxL7zluVpnzcCNM&callback=initMap"></script>
 </body>
