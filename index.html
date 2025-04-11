@@ -659,7 +659,7 @@ document.getElementById('cardWrapper').addEventListener('scroll', function () {
       document.getElementById('btnLine').href = s.line;
       document.getElementById('btnNav').href = s.nav;
       document.getElementById('btnBook').href = s.book;
-      map.setCenter({ lat: s.lat, lng: s.lng });
+      map.panTo({ lat: s.lat, lng: s.lng });
       if (open) document.getElementById('expandedCard').classList.add('active');
     }
 
