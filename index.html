@@ -118,46 +118,58 @@
       display: none;
     }
 
-    .store-card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 16px 20px;
-      position: fixed;
-      bottom: 70px;
-      left: 16px; right: 16px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      border: 1px solid var(--border);   /* Added light pink border around card */
-      z-index: 1001;
-      overscroll-behavior: contain;
-  touch-action: pan-y;
-    }
-    .store-card h2 {
-      font-size: 18px;
-      margin: 0 0 6px;
-      color: var(--text);   /* Unified text color */
-    }
-    .store-card .info {
-      font-size: 14px;
-      color: var(--text);   /* Unified text color */
-      margin-bottom: 4px;
-    }
-    .store-card .distance {
-      font-size: 13px;
-      color: var(--text);   /* Unified text color (was #999) */
-    }
-    .tags {
-      display: flex;
-      gap: 8px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-    .tags span {
-      background: var(--tag-bg);    /* Soft pink background for tags */
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      color: var(--text);          /* Tag text in dark gray */
-    }
+    .store-card,
+  .expanded-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px 20px;
+    position: fixed;
+    bottom: 80px;
+    left: 16px; right: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+    max-width: 420px;
+    margin: auto;
+    z-index: 1001;
+  }
+
+  .store-card {
+    min-height: 140px;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+
+  .store-card h2 {
+    font-size: 18px;
+    margin: 0 0 6px;
+    color: var(--text);
+  }
+
+  .store-card .info {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .store-card .distance {
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .tags {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tags span {
+    background: var(--tag-bg);
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--text);
+  }
 
     /* 📱 Bottom navigation bar: white background, pink border, inline SVG icons */
     .bottom-nav {
