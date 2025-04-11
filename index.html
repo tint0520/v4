@@ -253,38 +253,37 @@
 
   <!-- 底部選單 -->
   <div class="bottom-nav">
-  <!-- 搜尋 -->
+  <!-- 放大鏡（搜尋） -->
   <button class="nav-btn" onclick="toggleWindow('searchWindow')">
     <svg viewBox="0 0 24 24" width="26" height="26" stroke="#A78D6A" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="11" cy="11" r="8"/>
-      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      <circle cx="11" cy="11" r="7.5"/>
+      <line x1="17" y1="17" x2="21" y2="21"/>
     </svg>
   </button>
 
-  <!-- GPS -->
+  <!-- 定位（箭頭樣式） -->
   <button class="nav-btn" onclick="centerOnGPS()">
-    <svg viewBox="0 0 24 24" width="26" height="26" stroke="#A78D6A" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"/>
-      <circle cx="12" cy="12" r="3"/>
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#A78D6A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L13.5 10H18L12 22L6 10H10.5L12 2Z" />
     </svg>
   </button>
 
-  <!-- Home -->
+  <!-- 首頁（房屋圖示） -->
   <button class="nav-btn" onclick="closeExpandedCard()">
     <svg viewBox="0 0 24 24" width="26" height="26" stroke="#A78D6A" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M3 11L12 4l9 7" />
-      <path d="M9 21V12h6v9" />
+      <path d="M4 12L12 5L20 12"/>
+      <path d="M8 12V20H16V12"/>
     </svg>
   </button>
 
-  <!-- 收藏 -->
+  <!-- 收藏（愛心實心版） -->
   <button class="nav-btn" onclick="toggleWindow('favoriteWindow')">
     <svg viewBox="0 0 24 24" width="26" height="26" fill="#A78D6A">
       <path d="M12 21C12 21 5 14.8 5 9.5C5 6.42 7.42 4 10.5 4C12.24 4 13.91 4.81 15 6.08C16.09 4.81 17.76 4 19.5 4C22.58 4 25 6.42 25 9.5C25 14.8 18 21 18 21H12Z"/>
     </svg>
   </button>
 
-  <!-- 漢堡選單 -->
+  <!-- 選單（三條線） -->
   <button class="nav-btn" onclick="toggleWindow('menuWindow')">
     <svg viewBox="0 0 24 24" width="26" height="26" stroke="#A78D6A" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
       <line x1="4" y1="6" x2="20" y2="6"/>
