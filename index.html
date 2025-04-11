@@ -33,28 +33,28 @@
       z-index: 1;
     }
     .bottom-nav {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #f5f2ec;
-      border-radius: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      display: flex;
-      gap: 28px;
-      padding: 10px 20px;
-      z-index: 10;
-    }
-    .nav-btn {
-      background: none;
-      border: none;
-      padding: 6px;
-      border-radius: 50%;
-      transition: background 0.3s ease;
-    }
-    .nav-btn:hover {
-      background: rgba(0,0,0,0.05);
-    }
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #F8F5EF;
+  border-radius: 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  display: flex;
+  gap: 28px;
+  padding: 10px 20px;
+  z-index: 1000;
+}
+.nav-btn {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+}
+.nav-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
 
     /* 卡片、浮窗、展開卡片等容器設定 */
     .card-container {
@@ -253,22 +253,46 @@
 
   <!-- 底部選單 -->
   <div class="bottom-nav">
-    <button class="nav-btn" onclick="toggleWindow('searchWindow')">
-      <svg viewBox="0 0 24 24" width="26" height="26" stroke="#7b6e64" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    </button>
-    <button class="nav-btn" onclick="centerOnGPS()">
-      <svg viewBox="0 0 24 24" width="26" height="26" stroke="#7b6e64" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-    </button>
-    <button class="nav-btn" onclick="closeExpandedCard()">
-      <svg viewBox="0 0 24 24" width="26" height="26" stroke="#7b6e64" fill="none" stroke-width="2"><path d="M3 11L12 4l9 7"/><path d="M9 21V12h6v9"/></svg>
-    </button>
-    <button class="nav-btn" onclick="toggleWindow('favoriteWindow')">
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="#7b6e64"><path d="M12 21C12 21 5 14.8 5 9.5C5 6.42 7.42 4 10.5 4C12.24 4 13.91 4.81 15 6.08C16.09 4.81 17.76 4 19.5 4C22.58 4 25 6.42 25 9.5C25 14.8 18 21 18 21H12Z"/></svg>
-    </button>
-    <button class="nav-btn" onclick="toggleWindow('menuWindow')">
-      <svg viewBox="0 0 24 24" width="26" height="26" stroke="#7b6e64" fill="none" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
-    </button>
-  </div>
+  <!-- 搜尋 -->
+  <button class="nav-btn" onclick="toggleWindow('searchWindow')">
+    <svg viewBox="0 0 24 24" width="26" height="26" stroke="#A78D6A" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+  </button>
+
+  <!-- GPS -->
+  <button class="nav-btn" onclick="centerOnGPS()">
+    <svg viewBox="0 0 24 24" width="26" height="26" stroke="#A78D6A" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+  </button>
+
+  <!-- Home -->
+  <button class="nav-btn" onclick="closeExpandedCard()">
+    <svg viewBox="0 0 24 24" width="26" height="26" stroke="#A78D6A" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 11L12 4l9 7" />
+      <path d="M9 21V12h6v9" />
+    </svg>
+  </button>
+
+  <!-- 收藏 -->
+  <button class="nav-btn" onclick="toggleWindow('favoriteWindow')">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="#A78D6A">
+      <path d="M12 21C12 21 5 14.8 5 9.5C5 6.42 7.42 4 10.5 4C12.24 4 13.91 4.81 15 6.08C16.09 4.81 17.76 4 19.5 4C22.58 4 25 6.42 25 9.5C25 14.8 18 21 18 21H12Z"/>
+    </svg>
+  </button>
+
+  <!-- 漢堡選單 -->
+  <button class="nav-btn" onclick="toggleWindow('menuWindow')">
+    <svg viewBox="0 0 24 24" width="26" height="26" stroke="#A78D6A" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="4" y1="6" x2="20" y2="6"/>
+      <line x1="4" y1="12" x2="20" y2="12"/>
+      <line x1="4" y1="18" x2="20" y2="18"/>
+    </svg>
+  </button>
+</div>
 
   <!-- Google Maps JS + 假資料與互動邏輯 -->
   <script>
