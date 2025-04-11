@@ -380,6 +380,11 @@
   justify-content: space-between;
   padding-top: 16px;
 }
+
+    .expanded-card {
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
   </style>
 </head>
 <body>
@@ -592,183 +597,148 @@
   document.querySelector('.apply-btn')?.addEventListener('click', () => {
     alert("已套用篩選條件！（目前為 UI 模擬）");
   });
-</script>
 
+  window.onload = () => {
+    const storeCard = document.querySelector(".store-card");
+    const expandedCard = document.querySelector(".expanded-card");
+    const mapOverlay = document.querySelector(".map-overlay");
+    const locateBtn = document.querySelector(".bottom-nav svg:nth-child(2)");
+    const heartBtn = document.querySelector(".bottom-nav svg:nth-child(4)");
+    const menuBtn = document.querySelector(".bottom-nav svg:nth-child(5)");
+    const homeBtn = document.querySelector(".bottom-nav svg:nth-child(3)");
+    const searchBtn = document.querySelector(".bottom-nav svg:nth-child(1)");
+    const searchBox = document.querySelector(".search-box");
+    const searchClose = document.querySelector(".search-close");
+    const favoriteView = document.querySelector(".favorite-view");
+    const menuOverlay = document.querySelector(".menu-overlay");
+    const searchOverlay = document.querySelector(".search-overlay");
 
-  <script>
-   window.onload = () => {
-     const locateBtn = document.querySelector(".bottom-nav svg:nth-child(2)");
-const heartBtn = document.querySelector(".bottom-nav svg:nth-child(4)");
-  const menuBtn = document.querySelector(".bottom-nav svg:nth-child(5)");
-  const homeBtn = document.querySelector(".bottom-nav svg:nth-child(3)");
-  const searchBtn = document.querySelector(".bottom-nav svg:nth-child(1)");
-  const searchBox = document.querySelector(".search-box");
-  const searchClose = document.querySelector(".search-close");
-
-
-     
-  const storeCard = document.querySelector(".store-card");
-  const expandedCard = document.querySelector(".expanded-card");
-  const mapOverlay = document.querySelector(".map-overlay");
-
-  const favoriteView = document.querySelector(".favorite-view");
-  const menuOverlay = document.querySelector(".menu-overlay");
-  const searchOverlay = document.querySelector(".search-overlay");
-
-  // 加入防呆判斷，避免報錯
-  if (storeCard && expandedCard && mapOverlay) {
-    // 點小卡片 → 展開大卡
-    storeCard.addEventListener("click", () => {
+    // 展開卡片動畫顯示
+    function showExpandedCard() {
+      expandedCard.style.opacity = 0;
       expandedCard.style.display = "block";
-      expandedCard.classList.add("card-animate");
+      setTimeout(() => {
+        expandedCard.style.transition = "opacity 0.3s ease";
+        expandedCard.style.opacity = 1;
+      }, 10);
       storeCard.style.display = "none";
       mapOverlay.style.display = "block";
+    }
 
-      favoriteView && (favoriteView.style.display = "none");
-      menuOverlay && (menuOverlay.style.display = "none");
-      searchOverlay && (searchOverlay.style.display = "none");
+    // 收回卡片動畫顯示
+    function hideExpandedCard() {
+      expandedCard.style.transition = "opacity 0.3s ease";
+      expandedCard.style.opacity = 0;
+      setTimeout(() => {
+        expandedCard.style.display = "none";
+        storeCard.style.display = "block";
+        mapOverlay.style.display = "none";
+      }, 300);
+    }
 
-      const storeId = storeCard.getAttribute("data-id");
-      activateDot(storeId);
-    });
+    // 點小卡片 → 展開大卡
+    storeCard.addEventListener("click", showExpandedCard);
 
-    // 展開卡片滑下收回
+    // 展開卡片 → 下滑關閉
     let startY = 0;
-    let isDragging = false;
-    expandedCard.addEventListener("touchstart", (e) => {
-      startY = e.touches[0].clientY;
-      isDragging = true;
-    });
-    expandedCard.addEventListener("touchmove", (e) => {
-      if (!isDragging) return;
+    expandedCard.addEventListener("touchstart", e => startY = e.touches[0].clientY);
+    expandedCard.addEventListener("touchmove", e => {
       const diffY = e.touches[0].clientY - startY;
-      if (diffY > 60) {
-        expandedCard.style.display = "none";
-        expandedCard.classList.remove("card-animate");
-        storeCard.style.display = "block";
-        mapOverlay.style.display = "none";
-        isDragging = false;
-      }
-    });
-    expandedCard.addEventListener("touchend", () => {
-      isDragging = false;
+      if (diffY > 60) hideExpandedCard();
     });
 
-    // 小卡片上滑展開大卡
-    let cardStartY = 0;
-    let cardDragging = false;
-    storeCard.addEventListener("touchstart", (e) => {
-      cardStartY = e.touches[0].clientY;
-      cardDragging = true;
+    // 小卡片 → 上滑展開
+    storeCard.addEventListener("touchstart", e => startY = e.touches[0].clientY);
+    storeCard.addEventListener("touchmove", e => {
+      const diffY = e.touches[0].clientY - startY;
+      if (diffY < -60) showExpandedCard();
     });
-    storeCard.addEventListener("touchmove", (e) => {
-      if (!cardDragging) return;
-      const diffY = e.touches[0].clientY - cardStartY;
-      if (diffY < -60) {
-        expandedCard.style.display = "block";
-        expandedCard.classList.add("card-animate");
-        storeCard.style.display = "none";
-        mapOverlay.style.display = "block";
-        cardDragging = false;
-      }
+
+    // 地圖點擊收回（點地圖區域）
+    mapOverlay.addEventListener("click", hideExpandedCard);
+
+    // 點心愛 → 我的收藏
+    heartBtn.addEventListener("click", () => {
+      favoriteView.style.display = "block";
+      expandedCard.style.display = "none";
+      storeCard.style.display = "block";
+      mapOverlay.style.display = "none";
+      menuOverlay.style.display = "none";
+      searchOverlay.style.display = "none";
     });
-    storeCard.addEventListener("touchend", () => {
-      cardDragging = false;
+
+    // 點選單 → 漢堡頁
+    menuBtn.addEventListener("click", () => {
+      menuOverlay.style.display = "block";
+      expandedCard.style.display = "none";
+      storeCard.style.display = "block";
+      mapOverlay.style.display = "none";
+      favoriteView.style.display = "none";
+      searchOverlay.style.display = "none";
     });
-  }
 
-      // ❤️ Click heart (favorites icon) → show favorites page
-      heartBtn.addEventListener("click", () => {
-        favoriteView.style.display = "block";
-        expandedCard.style.display = "none";
-        storeCard.style.display = "block";
-        mapOverlay.style.display = "none";
-        menuOverlay.style.display = "none";
-        searchOverlay.style.display = "none";
-      });
+    // 點首頁 → 回主頁
+    homeBtn.addEventListener("click", () => {
+      expandedCard.style.display = "none";
+      storeCard.style.display = "block";
+      mapOverlay.style.display = "none";
+      favoriteView.style.display = "none";
+      menuOverlay.style.display = "none";
+      searchOverlay.style.display = "none";
+    });
 
-      // ☰ Click menu (hamburger icon) → show menu overlay
-      menuBtn.addEventListener("click", () => {
-        menuOverlay.style.display = "block";
-        expandedCard.style.display = "none";
-        storeCard.style.display = "block";
-        mapOverlay.style.display = "none";
-        favoriteView.style.display = "none";
-        searchOverlay.style.display = "none";
-      });
-
-      // 🏠 Click home icon → return to main map view
-      homeBtn.addEventListener("click", () => {
-        expandedCard.style.display = "none";
-        storeCard.style.display = "block";
-        mapOverlay.style.display = "none";
-        favoriteView.style.display = "none";
-        menuOverlay.style.display = "none";
-        searchOverlay.style.display = "none";
-      });
-
-      // 🔍 Click bottom search icon (same as tapping search bar) → open search overlay
-      searchBtn.addEventListener("click", () => {
-        searchOverlay.style.display = "block";
-        expandedCard.style.display = "none";
-        storeCard.style.display = "block";
-        mapOverlay.style.display = "none";
-        favoriteView.style.display = "none";
-        menuOverlay.style.display = "none";
-      });
-
-      // 點搜尋欄 (top search box) → 顯示搜尋浮窗
-      searchBox.addEventListener("click", () => {
-        searchOverlay.style.display = "block";
-        expandedCard.style.display = "none";
-        storeCard.style.display = "block";
-        mapOverlay.style.display = "none";
-        favoriteView.style.display = "none";
-        menuOverlay.style.display = "none";
-      });
-
-      // 點取消 → 關閉搜尋浮窗
-      searchClose.addEventListener("click", () => {
-        searchOverlay.style.display = "none";
-      });
-
-      // ✅ 定位按鈕邏輯 (click GPS locate icon, now at bottom nav)
-      if (locateBtn) {
-        locateBtn.addEventListener("click", () => {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-              const userLatLng = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude,
-              };
-              if (window.map) {
-                window.map.setCenter(userLatLng);
-                new google.maps.Marker({
-                  position: userLatLng,
-                  map: window.map,
-                 icon: {
-  path: google.maps.SymbolPath.CIRCLE,
-  scale: 10,
-  fillColor: "#F5A6CD",     // 主題粉紅
-  fillOpacity: 1,
-  strokeWeight: 1,
-  strokeColor: "#D08DAE"    // hover 粉邊
-},
-                  title: "你的位置",
-                });
-              } else {
-                alert("地圖尚未初始化，無法定位");
-              }
-            }, () => {
-              alert("無法取得你的位置，請確認裝置權限");
-            });
-          } else {
-            alert("此裝置不支援定位功能");
-          }
-        });
-      }
+    // 點搜尋按鈕（底部或上方）
+    const openSearch = () => {
+      searchOverlay.style.display = "block";
+      expandedCard.style.display = "none";
+      storeCard.style.display = "block";
+      mapOverlay.style.display = "none";
+      favoriteView.style.display = "none";
+      menuOverlay.style.display = "none";
     };
-  </script>
+    searchBtn.addEventListener("click", openSearch);
+    searchBox.addEventListener("click", openSearch);
+    searchClose.addEventListener("click", () => {
+      searchOverlay.style.display = "none";
+    });
+
+    // GPS 定位按鈕
+    if (locateBtn) {
+      locateBtn.addEventListener("click", () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(position => {
+            const userLatLng = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            if (window.map) {
+              window.map.setCenter(userLatLng);
+              new google.maps.Marker({
+                position: userLatLng,
+                map: window.map,
+                icon: {
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 10,
+                  fillColor: "#F5A6CD",
+                  fillOpacity: 1,
+                  strokeWeight: 1,
+                  strokeColor: "#D08DAE"
+                },
+                title: "你的位置"
+              });
+            } else {
+              alert("地圖尚未初始化，無法定位");
+            }
+          }, () => {
+            alert("無法取得你的位置，請確認裝置權限");
+          });
+        } else {
+          alert("此裝置不支援定位功能");
+        }
+      });
+    }
+  };
+</script>
 
   <!-- ✅ Initialize Google Map -->
   <script>
