@@ -56,27 +56,27 @@
   background: rgba(0, 0, 0, 0.04);
 }
 
-    /* 卡片、浮窗、展開卡片等容器設定 */
-    .card-container {
+  .card-container {
   position: absolute;
   bottom: 100px;
   left: 0;
   right: 0;
   z-index: 5;
-  overflow-x: auto;         /* ✅ 允許整個容器橫向滾動 */
+  overflow-x: auto; /* ✅ 改為讓整個區塊可橫向滑動 */
   -webkit-overflow-scrolling: touch;
+  pointer-events: all;
 }
 
 .card-wrapper {
   display: flex;
   gap: 12px;
   padding: 0 20px;
-  min-width: max-content;   /* ✅ 確保寬度隨卡片變寬 */
+  min-width: max-content; /* ✅ 自動撐開寬度以容納所有卡片 */
   scroll-snap-type: x mandatory;
 }
 
-   .store-card {
-  flex: 0 0 auto;         /* ✅ 不被壓縮，也不自動填滿 */
+.store-card {
+  flex: 0 0 auto; /* ✅ 確保每張卡片不被壓縮 */
   width: 280px;
   scroll-snap-align: center;
   background: #fffdf9;
