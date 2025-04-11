@@ -296,33 +296,53 @@
   <script>
     let map, userMarker, activeIndex = 0;
     const stores = [
-      {
-        name: '柔柔美甲小舖',
-        lat: 25.0452, lng: 121.5318,
-        image: 'https://images.unsplash.com/photo-1606312619344-500082ba8de6',
-        time: '11:00 - 20:00',
-        services: '美甲 / 凝膠 / 手護理',
-        intro: '一間專屬女生的柔美空間，提供高質感凝膠造型與客製設計。',
-        ig: 'https://instagram.com',
-        line: 'https://line.me',
-        nav: 'https://maps.google.com?q=25.0452,121.5318',
-        book: '#'
-      },
-      {
-        name: '小南美睫空間',
-        lat: 24.1477, lng: 120.6736,
-        image: 'https://images.unsplash.com/photo-1594737625785-cdfebd7a9d0a',
-        time: '10:00 - 19:00',
-        services: '日式美睫 / 卸睫 / 保養',
-        intro: '專業美睫師為您打造自然感電眼，舒適空間放鬆享受。',
-        ig: '#', line: '#', nav: '#', book: '#'
-      },
-      {
+       {
+    name: '柔柔美甲小舖',
+    lat: 25.0452, lng: 121.5318,
+    image: 'https://images.unsplash.com/photo-1606312619344-500082ba8de6',
+    time: '11:00 - 20:00',
+    services: '美甲 / 凝膠 / 手護理',
+    reservation: 'LINE 預約',
+    region: '台北市大安區',
+    distance: '300m',
+    intro: '一間專屬女生的柔美空間，提供高質感凝膠造型與客製設計。',
+    ig: 'https://instagram.com',
+    line: 'https://line.me',
+    nav: 'https://maps.google.com?q=25.0452,121.5318',
+    book: '#'
+  },
+  {
+    name: '小南美睫空間',
+    lat: 24.1477, lng: 120.6736,
+    image: 'https://images.unsplash.com/photo-1594737625785-cdfebd7a9d0a',
+    time: '10:00 - 19:00',
+    services: '日式美睫 / 卸睫 / 保養',
+    reservation: 'IG 私訊',
+    region: '台中市西區',
+    distance: '1.2km',
+    intro: '專業美睫師為您打造自然感電眼，舒適空間放鬆享受。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '粉棕工作室',
+    lat: 22.6273, lng: 120.3014,
+    image: 'https://images.unsplash.com/photo-1589998059171-988d887df646',
+    time: '12:00 - 21:00',
+    services: '美甲 / 預約制 / 獨立空間',
+    reservation: '表單填寫',
+    region: '高雄市新興區',
+    distance: '2.0km',
+    intro: '藏身市中心的秘密工作室，適合享受靜謐服務的妳。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },  {
     name: '琉璃美甲藝術',
     lat: 25.0329, lng: 121.5654,
     image: 'https://images.unsplash.com/photo-1604014238631-76e91f3b0b7f',
     time: '10:30 - 20:00',
     services: '凝膠彩繪 / 基礎保養',
+    reservation: 'LINE 預約',
+    region: '台北市信義區',
+    distance: '600m',
     intro: '主打手繪凝膠彩繪，每雙手都是獨一無二的藝術品。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -332,6 +352,9 @@
     image: 'https://images.unsplash.com/photo-1603575447658-3ef16d346c45',
     time: '09:00 - 18:00',
     services: '韓式睫毛 / 睫毛嫁接 / 卸睫',
+    reservation: 'IG 私訊',
+    region: '桃園市中壢區',
+    distance: '850m',
     intro: '打造專屬你的清新妝感，輕盈自然無負擔。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -341,6 +364,9 @@
     image: 'https://images.unsplash.com/photo-1590080876211-bc0cb9bd7521',
     time: '13:00 - 21:00',
     services: '手足保養 / 蠟除毛',
+    reservation: '表單填寫',
+    region: '雲林縣斗六市',
+    distance: '2.4km',
     intro: '藏匿在老街巷內的放鬆天地，專屬預約制服務。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -350,6 +376,9 @@
     image: 'https://images.unsplash.com/photo-1624812178297-6b1f2e007064',
     time: '11:00 - 20:00',
     services: '粉嫩凝膠 / 手部彩繪',
+    reservation: 'LINE 預約',
+    region: '新竹市東區',
+    distance: '1.1km',
     intro: '風格溫柔清新，適合喜愛少女色調的你。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -359,6 +388,9 @@
     image: 'https://images.unsplash.com/photo-1588776814546-b1d2b5dc726b',
     time: '10:00 - 19:00',
     services: '造型剪髮 / 護髮',
+    reservation: 'IG 預約連結',
+    region: '台北市松山區',
+    distance: '500m',
     intro: '結合日系設計與個人風格，專屬的髮型提案。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -368,6 +400,9 @@
     image: 'https://images.unsplash.com/photo-1612109378622-594f57f37c15',
     time: '12:00 - 21:00',
     services: '指緣保養 / 芳療護理',
+    reservation: 'LINE 私訊',
+    region: '台南市北區',
+    distance: '1.8km',
     intro: '結合天然香氛與手部護理，療癒你的身心。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -377,6 +412,9 @@
     image: 'https://images.unsplash.com/photo-1588775567580-eed9516271ce',
     time: '11:30 - 20:30',
     services: '自然款睫毛 / 純手工接睫',
+    reservation: '表單填寫',
+    region: '台中市西區',
+    distance: '950m',
     intro: '不誇張卻精緻，重現眼神的靈魂。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -386,6 +424,9 @@
     image: 'https://images.unsplash.com/photo-1625671035177-2e9b2b5bb02c',
     time: '13:00 - 22:00',
     services: '凝膠 / 延甲 / 貓眼設計',
+    reservation: 'LINE 預約',
+    region: '雲林縣斗六市',
+    distance: '2.6km',
     intro: '專精貓眼與延甲技術，閃耀你的每一日。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -395,6 +436,9 @@
     image: 'https://images.unsplash.com/photo-1610477291273-9202e5a87225',
     time: '10:00 - 20:00',
     services: '法式凝膠 / 保養護理',
+    reservation: 'IG 私訊',
+    region: '台北市中正區',
+    distance: '700m',
     intro: '簡約生活中的柔軟小確幸。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -404,15 +448,20 @@
     image: 'https://images.unsplash.com/photo-1599940824391-8f2a7d52935c',
     time: '10:30 - 19:00',
     services: '個性凝膠 / 彩繪造型',
+    reservation: 'LINE 聯絡',
+    region: '高雄市前金區',
+    distance: '1.3km',
     intro: '自由靈魂的顏色實驗室，妳的風格妳來定義。',
     ig: '#', line: '#', nav: '#', book: '#'
-  },
-  {
+  },  {
     name: '橘光工作室',
     lat: 24.9555, lng: 121.2167,
     image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e',
     time: '09:30 - 18:30',
     services: '極簡美甲 / 指緣修護',
+    reservation: 'LINE 預約',
+    region: '新竹縣竹北市',
+    distance: '1.6km',
     intro: '簡約中見精緻，喜歡自然感的妳會愛上。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -422,6 +471,9 @@
     image: 'https://images.unsplash.com/photo-1587005065981-1e8e682938d6',
     time: '12:00 - 21:00',
     services: '濃密接睫 / 睫毛護理',
+    reservation: 'IG 預約連結',
+    region: '台中市南區',
+    distance: '2.1km',
     intro: '專屬客製眼型搭配，自然與濃密兼具。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -431,6 +483,9 @@
     image: 'https://images.unsplash.com/photo-1594561465259-fbc0d3016c56',
     time: '14:00 - 22:00',
     services: '療癒系美甲 / 自然護理',
+    reservation: 'LINE 預約',
+    region: '南投市',
+    distance: '3.4km',
     intro: '像繭一樣溫柔包覆的美學小天地。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -440,6 +495,9 @@
     image: 'https://images.unsplash.com/photo-1615371959759-47349de4b3ae',
     time: '10:00 - 19:30',
     services: '指尖設計 / 清新風格',
+    reservation: '表單填寫',
+    region: '高雄市苓雅區',
+    distance: '1.9km',
     intro: '每次造訪都像陽光灑進心裡，充滿能量的空間。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -449,6 +507,9 @@
     image: 'https://images.unsplash.com/photo-1599945468073-c844865d55ce',
     time: '11:00 - 21:00',
     services: '少女系凝膠 / 彩繪貼紙',
+    reservation: 'IG 私訊',
+    region: '新北市板橋區',
+    distance: '950m',
     intro: '夢幻少女心集散地，粉嫩控的天堂。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -458,6 +519,9 @@
     image: 'https://images.unsplash.com/photo-1588776813716-35aee4eb865a',
     time: '13:00 - 21:00',
     services: '極簡風 / 客製彩繪',
+    reservation: 'LINE 預約',
+    region: '彰化縣員林市',
+    distance: '2.9km',
     intro: '在小井遇見溫柔，設計從妳的故事出發。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -467,6 +531,9 @@
     image: 'https://images.unsplash.com/photo-1606112219348-204d7d8b94ee',
     time: '09:00 - 18:00',
     services: '輕感睫毛 / 日式分段技法',
+    reservation: 'LINE 預約',
+    region: '桃園市楊梅區',
+    distance: '1.2km',
     intro: '注重舒適與質感兼具的日式睫毛專門店。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -476,6 +543,9 @@
     image: 'https://images.unsplash.com/photo-1590080876211-bc0cb9bd7521',
     time: '12:00 - 21:30',
     services: '手足凝膠 / 動物圖案',
+    reservation: 'IG 私訊',
+    region: '新竹市北區',
+    distance: '800m',
     intro: '主打可愛手繪動物圖樣，喜歡貓貓狗狗看這邊！',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -485,6 +555,9 @@
     image: 'https://images.unsplash.com/photo-1625187494659-b3f91a3b1ff5',
     time: '10:30 - 19:30',
     services: '凝膠指彩 / 海系風格',
+    reservation: '表單預約',
+    region: '澎湖縣馬公市',
+    distance: '5.1km',
     intro: '靈感來自島嶼日光，專屬你的夏日色彩。',
     ig: '#', line: '#', nav: '#', book: '#'
   },
@@ -494,6 +567,9 @@
     image: 'https://images.unsplash.com/photo-1613565438585-d90a6fa9c8a6',
     time: '11:00 - 20:00',
     services: '輕羽接睫 / 眼型設計',
+    reservation: 'LINE 預約',
+    region: '台北市中山區',
+    distance: '350m',
     intro: '極簡系睫毛空間，讓妳的眼神保有純粹。',
     ig: '#', line: '#', nav: '#', book: '#'
   }
