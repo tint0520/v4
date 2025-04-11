@@ -421,11 +421,19 @@ document.getElementById('cardWrapper').addEventListener('scroll', function () {
       document.getElementById('expandedCard').classList.remove('active');
     }
 
-    function toggleWindow(id) {
-      closeExpandedCard();
-      document.querySelectorAll('.floating-window').forEach(w => w.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
+   function toggleWindow(id) {
+  const target = document.getElementById(id);
+  const isOpen = target.classList.contains('active');
+
+  // 收起所有浮窗與展開卡片
+  document.querySelectorAll('.floating-window').forEach(w => w.classList.remove('active'));
+  closeExpandedCard();
+
+  // 如果原本沒開，就開；已開就收起
+  if (!isOpen) {
+    target.classList.add('active');
+  }
+}
 
     function closeWindow(id) {
       document.getElementById(id).classList.remove('active');
