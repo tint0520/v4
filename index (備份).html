@@ -102,19 +102,20 @@
 
         /* 展開卡片與浮窗 */
     .expanded-card {
-      position: fixed;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100%);
-      width: 90%;
-      max-width: 400px;
-      background: #fffefb;
-      border-radius: 20px;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.15);
-      z-index: 15;
-      opacity: 0;
-      transition: transform 0.4s ease, opacity 0.4s ease;
-    }
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 90%;
+  max-width: 400px;
+  min-height: 280px; /* ✅ 可選，避免卡片太小或內容被吃掉 */
+  background: #fffefb;
+  border-radius: 20px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+  z-index: 2000;
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
     .expanded-card.active {
       transform: translateX(-50%) translateY(0);
       opacity: 1;
@@ -612,7 +613,7 @@ document.getElementById('cardWrapper').addEventListener('scroll', function () {
 
   // 若滑動到新卡片就更新地圖位置
   if (closestIndex !== activeIndex) {
-    updateCardUI(closestIndex);
+    updateCardUI(closestIndex, true);
   }
 });
       });
@@ -647,11 +648,12 @@ document.getElementById('cardWrapper').addEventListener('scroll', function () {
       document.getElementById('btnNav').href = s.nav;
       document.getElementById('btnBook').href = s.book;
       map.panTo({ lat: s.lat, lng: s.lng });
-  if (open) {
-    const card = document.getElementById('expandedCard');
-    card.classList.remove('active');
-    setTimeout(() => card.classList.add('active'), 10);
-  }
+ if (open) {
+  console.log('✅ 展開卡片觸發：index =', index); // 👈 加這一行！
+  const card = document.getElementById('expandedCard');
+  card.classList.remove('active');
+  setTimeout(() => card.classList.add('active'), 10);
+}
 } // ✅ ←←← 你只要補這一行，就一切正常！
     function closeExpandedCard() {
       document.getElementById('expandedCard').classList.remove('active');
@@ -689,6 +691,20 @@ window.addEventListener('load', () => {
     updateCardUI(0, true);
   }, 1000);
 });
+const expandedCard = document.getElementById('expandedCard');
+let startY = 0;
+
+expandedCard.addEventListener('touchstart', (e) => {
+  startY = e.touches[0].clientY;
+});
+
+expandedCard.addEventListener('touchend', (e) => {
+  const endY = e.changedTouches[0].clientY;
+  if (endY - startY > 60) {
+    closeExpandedCard();
+  }
+});
+    
   </script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLCB3EKFwsIqPwEEL_hxL7zluVpnzcCNM&callback=initMap"></script>
 </body>
