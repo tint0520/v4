@@ -236,6 +236,14 @@ let map, userMarker, activeIndex = 0;
 let stores = []; // ✅ 真資料會從 fetch 進來
 const markers = []; // ✅ 成為全域變數
 
+function initMap() {
+  // ✅ 建立地圖本體
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: { lat: 23.5, lng: 121 }, // 臺灣中心點 fallback
+    zoom: 14,
+    mapTypeControl: false
+  });
+    
 navigator.geolocation.getCurrentPosition(pos => {
   const userLat = pos.coords.latitude;
   const userLng = pos.coords.longitude;
@@ -272,12 +280,6 @@ navigator.geolocation.getCurrentPosition(pos => {
   alert("⚠️ 無法取得您的定位，請開啟 GPS 或允許權限");
 });
 
-function initMap(userPos) {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: userPos,
-    zoom: 14,
-    mapTypeControl: false
-  });
 
   userMarker = new google.maps.Marker({
     position: userPos,
@@ -405,6 +407,6 @@ window.addEventListener("load", () => {
   
 </script>
 <!-- ✅ Google Maps API 記得不要帶 callback -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLCB3EKFwsIqPwEEL_hxL7zluVpnzcCNM"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLCB3EKFwsIqPwEEL_hxL7zluVpnzcCNM&callback=initMa"></script>
 </body>
 </html>
