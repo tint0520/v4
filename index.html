@@ -136,11 +136,33 @@
     .card-wrapper::-webkit-scrollbar {
       display: none;
     }
+
+/* ✅ 新增 GPS 定位按鈕樣式 */
+.gps-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #ffffff;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 8px;
+  z-index: 999;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.gps-btn:hover {
+  background: #f2f2f2;
+}
+    
   </style>
 </head>
 <body>
   <div id="map"></div>
-
+<button id="gpsButton" class="gps-btn" onclick="centerOnGPS()" title="定位到我">
+  <img src="./img/icon_gps.png" alt="定位" width="28" height="28" />
+</button>
 
     <!-- 店家卡片滑動容器 -->
   <div class="card-container">
