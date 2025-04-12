@@ -689,6 +689,20 @@ window.addEventListener('load', () => {
     updateCardUI(0, true);
   }, 1000);
 });
+const expandedCard = document.getElementById('expandedCard');
+let startY = 0;
+
+expandedCard.addEventListener('touchstart', (e) => {
+  startY = e.touches[0].clientY;
+});
+
+expandedCard.addEventListener('touchend', (e) => {
+  const endY = e.changedTouches[0].clientY;
+  if (endY - startY > 60) {
+    closeExpandedCard();
+  }
+});
+    
   </script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLCB3EKFwsIqPwEEL_hxL7zluVpnzcCNM&callback=initMap"></script>
 </body>
