@@ -299,28 +299,23 @@ function processData(userLat, userLng) {
     .then((data) => {
       console.log("📦 抓到 Google Sheet 筆數：", data.length);
 
-      stores = data
-  .filter((row) => row.latlng && row.latlng.includes(",")) // ✅ 改這：檢查 latlng 有值且正確格式
+    stores = data
+  .filter((row) => row.latlng && row.latlng.includes(",")) // ✅ 只抓 latlng 格式正確的
   .map((row) => {
-    const [lat, lng] = row.latlng.split(",").map(Number);  // ✅ 改這：從 latlng 拆出經緯度
+    const [lat, lng] = row.latlng.split(",").map(Number);  // ✅ 拆經緯度
     if (!lat || !lng) return null;
 
+    const distanceMeters = getDistance(userLat, userLng, lat, lng);
 
-  const [lat, lng] = row.latlng.split(",").map(Number);
+    const distanceText =
+      distanceMeters < 1000
+        ? `${Math.round(distanceMeters)}m`
+        : `${(distanceMeters / 1000).toFixed(1)}km`;
 
-  if (!lat || !lng) return null;
-
-  const distanceMeters = getDistance(userLat, userLng, lat, lng);
-
-  const distanceText =
-    distanceMeters < 1000
-      ? `${Math.round(distanceMeters)}m`
-      : `${(distanceMeters / 1000).toFixed(1)}km`;
-
- return {
+    return {
       name: row.name,
-      lat: lat,         // ✅ 改這：lat / lng 是從 latlng 拆出來的
-      lng: lng,
+      lat: lat,              // ✅ 傳給地圖使用的 lat
+      lng: lng,              // ✅ 傳給地圖使用的 lng
       image: row.image,
       time: row.time,
       services: row.services,
@@ -329,7 +324,7 @@ function processData(userLat, userLng) {
       distance: distanceText,
     };
   })
-  .filter(Boolean); // ✅ 加這：移除不合法資料
+  .filter(Boolean); // ✅ 過濾掉格式錯誤的資料
 
       stores.forEach((store, index) => {
         const marker = new google.maps.Marker({
