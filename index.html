@@ -339,7 +339,8 @@ navigator.geolocation.getCurrentPosition(
     alert("⚠️ 無法取得您的定位，請開啟 GPS 或允許權限");
   }
 ); // ← 結束 geolocation.getCurrentPosition
-
+};  
+    
 function renderCards() {
   const wrapper = document.getElementById("cardWrapper");
   stores.forEach((s, i) => {
