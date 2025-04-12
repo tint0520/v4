@@ -301,31 +301,33 @@ function processData(userLat, userLng) {
 
       stores = data
         .filter((row) => row.lat && row.lng)
-        .map((row) => {
-          const distanceMeters = getDistance(
-            userLat,
-            userLng,
-            parseFloat(row.lat),
-            parseFloat(row.lng)
-          );
+       .map((row) => {
+  // ✅ 從 latlng 欄位拆出經緯度
+  if (!row.latlng || !row.latlng.includes(",")) return null;
 
-          const distanceText =
-            distanceMeters < 1000
-              ? `${Math.round(distanceMeters)}m`
-              : `${(distanceMeters / 1000).toFixed(1)}km`;
+  const [lat, lng] = row.latlng.split(",").map(Number);
 
-          return {
-            name: row.name,
-            lat: parseFloat(row.lat),
-            lng: parseFloat(row.lng),
-            image: row.image,
-            time: row.time,
-            services: row.services,
-            reservation: row.reservation,
-            region: row.region,
-            distance: distanceText,
-          };
-        });
+  if (!lat || !lng) return null;
+
+  const distanceMeters = getDistance(userLat, userLng, lat, lng);
+
+  const distanceText =
+    distanceMeters < 1000
+      ? `${Math.round(distanceMeters)}m`
+      : `${(distanceMeters / 1000).toFixed(1)}km`;
+
+  return {
+    name: row.name,
+    lat: lat,             // ✅ 用拆出來的 lat
+    lng: lng,             // ✅ 用拆出來的 lng
+    image: row.image,
+    time: row.time,
+    services: row.services,
+    reservation: row.reservation,
+    region: row.region,
+    distance: distanceText,
+  };
+}).filter(Boolean); // ✅ 過濾掉資料格式錯的行
 
       stores.forEach((store, index) => {
         const marker = new google.maps.Marker({
