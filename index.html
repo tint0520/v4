@@ -300,10 +300,11 @@ function processData(userLat, userLng) {
       console.log("📦 抓到 Google Sheet 筆數：", data.length);
 
       stores = data
-        .filter((row) => row.lat && row.lng)
-       .map((row) => {
-  // ✅ 從 latlng 欄位拆出經緯度
-  if (!row.latlng || !row.latlng.includes(",")) return null;
+  .filter((row) => row.latlng && row.latlng.includes(",")) // ✅ 改這：檢查 latlng 有值且正確格式
+  .map((row) => {
+    const [lat, lng] = row.latlng.split(",").map(Number);  // ✅ 改這：從 latlng 拆出經緯度
+    if (!lat || !lng) return null;
+
 
   const [lat, lng] = row.latlng.split(",").map(Number);
 
@@ -316,18 +317,19 @@ function processData(userLat, userLng) {
       ? `${Math.round(distanceMeters)}m`
       : `${(distanceMeters / 1000).toFixed(1)}km`;
 
-  return {
-    name: row.name,
-    lat: lat,             // ✅ 用拆出來的 lat
-    lng: lng,             // ✅ 用拆出來的 lng
-    image: row.image,
-    time: row.time,
-    services: row.services,
-    reservation: row.reservation,
-    region: row.region,
-    distance: distanceText,
-  };
-}).filter(Boolean); // ✅ 過濾掉資料格式錯的行
+ return {
+      name: row.name,
+      lat: lat,         // ✅ 改這：lat / lng 是從 latlng 拆出來的
+      lng: lng,
+      image: row.image,
+      time: row.time,
+      services: row.services,
+      reservation: row.reservation,
+      region: row.region,
+      distance: distanceText,
+    };
+  })
+  .filter(Boolean); // ✅ 加這：移除不合法資料
 
       stores.forEach((store, index) => {
         const marker = new google.maps.Marker({
