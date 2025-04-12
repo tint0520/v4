@@ -102,19 +102,20 @@
 
         /* 展開卡片與浮窗 */
     .expanded-card {
-      position: fixed;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100%);
-      width: 90%;
-      max-width: 400px;
-      background: #fffefb;
-      border-radius: 20px;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.15);
-      z-index: 15;
-      opacity: 0;
-      transition: transform 0.4s ease, opacity 0.4s ease;
-    }
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 90%;
+  max-width: 400px;
+  min-height: 280px; /* ✅ 可選，避免卡片太小或內容被吃掉 */
+  background: #fffefb;
+  border-radius: 20px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+  z-index: 2000;
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
     .expanded-card.active {
       transform: translateX(-50%) translateY(0);
       opacity: 1;
