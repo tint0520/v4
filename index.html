@@ -237,112 +237,132 @@ let map, userMarker, activeIndex = 0;
 let stores = [];
 const markers = [];
 
-window.initMap = function() {
-  console.log("✅ initMap 已執行，地圖初始化成功");
+// 🧠 ✅ 第1段：initMap() 與 processData()
+// 替換原本的 window.initMap 區塊
 
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: 23.5, lng: 121 },
-    zoom: 14,
-    mapTypeControl: false
-  });
+window.initMap = function () {
+  console.log("✅ initMap 已啟動");
 
   navigator.geolocation.getCurrentPosition(
     (pos) => {
       const userLat = pos.coords.latitude;
       const userLng = pos.coords.longitude;
+      console.log("📍 成功取得 GPS 位置：", userLat, userLng);
 
-      fetch(SHEET_URL)
-        .then((res) => res.json())
-        .then((data) => {
-          stores = data.map((row) => {
-            const distanceMeters = getDistance(
-              userLat,
-              userLng,
-              parseFloat(row.lat),
-              parseFloat(row.lng)
-            );
-
-            const distanceText =
-              distanceMeters < 1000
-                ? `${Math.round(distanceMeters)}m`
-                : `${(distanceMeters / 1000).toFixed(1)}km`;
-
-            return {
-              name: row.name,
-              lat: parseFloat(row.lat),
-              lng: parseFloat(row.lng),
-              image: row.image,
-              time: row.time,
-              services: row.services,
-              reservation: row.reservation,
-              region: row.region,
-              distance: distanceText,
-            };
-          });
-
-          const userPos = { lat: userLat, lng: userLng };
-
-          userMarker = new google.maps.Marker({
-            position: userPos,
-            map: map,
-            title: "你在這裡",
-            icon: {
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 8,
-              fillColor: "#4285F4",
-              fillOpacity: 1,
-              strokeWeight: 2,
-              strokeColor: "#fff",
-            },
-          });
-
-          stores.forEach((store, index) => {
-            const marker = new google.maps.Marker({
-              position: { lat: store.lat, lng: store.lng },
-              map: map,
-              title: store.name,
-            });
-            markers.push(marker);
-          });
-
-          renderCards();
-          updateCardUI(0);
-
-          document
-            .getElementById("cardWrapper")
-            .addEventListener("scroll", function () {
-              const wrapper = this;
-              const cards = wrapper.querySelectorAll(".store-card");
-              let minDistance = Infinity;
-              let closestIndex = 0;
-
-              cards.forEach((card, index) => {
-                const cardCenter =
-                  card.getBoundingClientRect().left + card.offsetWidth / 2;
-                const wrapperCenter =
-                  wrapper.getBoundingClientRect().left +
-                  wrapper.offsetWidth / 2;
-                const distance = Math.abs(cardCenter - wrapperCenter);
-                if (distance < minDistance) {
-                  minDistance = distance;
-                  closestIndex = index;
-                }
-              });
-
-              if (closestIndex !== activeIndex) {
-                updateCardUI(closestIndex);
-              }
-            });
-        });
+      processData(userLat, userLng);
     },
-    () => {
-      alert("⚠️ 無法取得您的定位，請開啟 GPS 或允許權限");
+    (err) => {
+      console.warn("❌ 無法取得定位：", err.message);
+      alert("⚠️ 無法取得您的定位，將使用台北101作為模擬中心點");
+
+      const fallbackLat = 25.033968;
+      const fallbackLng = 121.564468;
+      processData(fallbackLat, fallbackLng);
     }
   );
 };
 
+function processData(userLat, userLng) {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: { lat: userLat, lng: userLng },
+    zoom: 14,
+    mapTypeControl: false
+  });
+
+  userMarker = new google.maps.Marker({
+    position: { lat: userLat, lng: userLng },
+    map: map,
+    title: "你在這裡",
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 8,
+      fillColor: "#4285F4",
+      fillOpacity: 1,
+      strokeWeight: 2,
+      strokeColor: "#fff",
+    },
+  });
+
+  fetch(SHEET_URL)
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("📦 抓到 Google Sheet 筆數：", data.length);
+      stores = data.map((row) => {
+        const distanceMeters = getDistance(
+          userLat,
+          userLng,
+          parseFloat(row.lat),
+          parseFloat(row.lng)
+        );
+
+        const distanceText =
+          distanceMeters < 1000
+            ? `${Math.round(distanceMeters)}m`
+            : `${(distanceMeters / 1000).toFixed(1)}km`;
+
+        return {
+          name: row.name,
+          lat: parseFloat(row.lat),
+          lng: parseFloat(row.lng),
+          image: row.image,
+          time: row.time,
+          services: row.services,
+          reservation: row.reservation,
+          region: row.region,
+          distance: distanceText,
+        };
+      });
+
+      stores.forEach((store, index) => {
+        const marker = new google.maps.Marker({
+          position: { lat: store.lat, lng: store.lng },
+          map: map,
+          title: store.name,
+        });
+        markers.push(marker);
+      });
+
+      renderCards();
+      updateCardUI(0);
+
+      document
+        .getElementById("cardWrapper")
+        .addEventListener("scroll", function () {
+          const wrapper = this;
+          const cards = wrapper.querySelectorAll(".store-card");
+          let minDistance = Infinity;
+          let closestIndex = 0;
+
+          cards.forEach((card, index) => {
+            const cardCenter =
+              card.getBoundingClientRect().left + card.offsetWidth / 2;
+            const wrapperCenter =
+              wrapper.getBoundingClientRect().left +
+              wrapper.offsetWidth / 2;
+            const distance = Math.abs(cardCenter - wrapperCenter);
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestIndex = index;
+            }
+          });
+
+          if (closestIndex !== activeIndex) {
+            updateCardUI(closestIndex);
+          }
+        });
+    })
+    .catch((err) => {
+      alert("❌ 資料載入失敗，請檢查 Google Sheet 權限或網路問題");
+      console.error(err);
+    });
+}
+
+
+// 🧠 ✅ 第2段：renderCards 與 updateCardUI（確保卡片與地圖同步）
 function renderCards() {
   const wrapper = document.getElementById("cardWrapper");
+  wrapper.innerHTML = ""; // ✅ 每次先清空，避免重複新增
+
   stores.forEach((s, i) => {
     const div = document.createElement("div");
     div.className = "store-card";
@@ -362,34 +382,66 @@ function renderCards() {
 function updateCardUI(index) {
   activeIndex = index;
   const s = stores[index];
+
   map.setCenter({ lat: s.lat, lng: s.lng });
-  google.maps.event.addListenerOnce(map, 'idle', function () {
+
+  google.maps.event.addListenerOnce(map, "idle", function () {
     const mapHeight = document.getElementById("map").offsetHeight;
     map.panBy(0, mapHeight / 3);
   });
 }
 
+// 🧠 ✅ 第3段：centerOnGPS、toggleWindow、closeWindow、load事件
+
 function centerOnGPS() {
   if (navigator.geolocation && map) {
-    navigator.geolocation.getCurrentPosition(pos => {
-      const userPos = {
-        lat: pos.coords.latitude,
-        lng: pos.coords.longitude
-      };
-      map.setCenter(userPos);
-      google.maps.event.addListenerOnce(map, 'idle', function () {
-        const mapHeight = document.getElementById("map").offsetHeight;
-        map.panBy(0, mapHeight / 3);
-      });
-    });
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const userPos = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        };
+        map.setCenter(userPos);
+        google.maps.event.addListenerOnce(map, "idle", function () {
+          const mapHeight = document.getElementById("map").offsetHeight;
+          map.panBy(0, mapHeight / 3);
+        });
+        // 同步更新藍點
+        if (userMarker) {
+          userMarker.setPosition(userPos);
+        } else {
+          userMarker = new google.maps.Marker({
+            position: userPos,
+            map: map,
+            title: "你在這裡",
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 8,
+              fillColor: "#4285F4",
+              fillOpacity: 1,
+              strokeWeight: 2,
+              strokeColor: "#fff",
+            },
+          });
+        }
+      },
+      (err) => {
+        alert("⚠️ 定位失敗：" + err.message);
+      }
+    );
+  } else {
+    alert("❌ 您的瀏覽器不支援定位功能");
   }
 }
 
 function toggleWindow(id) {
   const target = document.getElementById(id);
   const isOpen = target.classList.contains("active");
+
   if (!isOpen) {
     target.classList.add("active");
+  } else {
+    target.classList.remove("active");
   }
 }
 
@@ -397,19 +449,7 @@ function closeWindow(id) {
   document.getElementById(id).classList.remove("active");
 }
 
-function getDistance(lat1, lng1, lat2, lng2) {
-  const R = 6371000;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLng = (lng2 - lng1) * Math.PI / 180;
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(lat1 * Math.PI / 180) *
-    Math.cos(lat2 * Math.PI / 180) *
-    Math.sin(dLng / 2) ** 2;
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
+// ✅ 頁面載入後：延遲觸發卡片對齊
 window.addEventListener("load", () => {
   setTimeout(() => {
     updateCardUI(0);
