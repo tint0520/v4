@@ -648,11 +648,12 @@ document.getElementById('cardWrapper').addEventListener('scroll', function () {
       document.getElementById('btnNav').href = s.nav;
       document.getElementById('btnBook').href = s.book;
       map.panTo({ lat: s.lat, lng: s.lng });
-  if (open) {
-    const card = document.getElementById('expandedCard');
-    card.classList.remove('active');
-    setTimeout(() => card.classList.add('active'), 10);
-  }
+ if (open) {
+  console.log('✅ 展開卡片觸發：index =', index); // 👈 加這一行！
+  const card = document.getElementById('expandedCard');
+  card.classList.remove('active');
+  setTimeout(() => card.classList.add('active'), 10);
+}
 } // ✅ ←←← 你只要補這一行，就一切正常！
     function closeExpandedCard() {
       document.getElementById('expandedCard').classList.remove('active');
