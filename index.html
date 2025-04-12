@@ -647,9 +647,11 @@ document.getElementById('cardWrapper').addEventListener('scroll', function () {
       document.getElementById('btnNav').href = s.nav;
       document.getElementById('btnBook').href = s.book;
       map.panTo({ lat: s.lat, lng: s.lng });
-      if (open) document.getElementById('expandedCard').classList.add('active');
-    }
-
+if (open) {
+  const card = document.getElementById('expandedCard');
+  card.classList.remove('active'); // 保險地先移除
+  setTimeout(() => card.classList.add('active'), 10); // 確保動畫觸發
+}
     function closeExpandedCard() {
       document.getElementById('expandedCard').classList.remove('active');
     }
