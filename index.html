@@ -146,7 +146,7 @@
   border: none;
   border-radius: 50%;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  padding: 6px;
+  padding: 5px;
   z-index: 999;
   cursor: pointer;
   transition: background 0.3s ease;
@@ -161,7 +161,7 @@
 <body>
   <div id="map"></div>
 <button id="gpsButton" class="gps-btn" onclick="centerOnGPS()" title="定位到我">
-  <img src="./img/icon_gps.png" alt="定位" width="36" height="36" />
+  <img src="./img/icon_gps.png" alt="定位" width="38" height="38" />
 </button>
 
     <!-- 店家卡片滑動容器 -->
@@ -569,7 +569,7 @@ div.innerHTML = `
   <div class="info">時間：${s.time}</div>
   <div class="info">服務：${s.services}</div>
   <div class="info">預約：${s.reservation}</div>
-  <div class="info">${s.distance}・${s.region}</div>
+  <div class="info">距離：${s.distance}・${s.region}</div>
 `;
         div.onclick = () => updateCardUI(i, true);
         wrapper.appendChild(div);
