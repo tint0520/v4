@@ -250,35 +250,31 @@
   </div>
 
   <!-- 底部選單 -->
-  <div class="bottom-nav">
-  <!-- 放大鏡（搜尋） -->
-<button class="nav-btn" onclick="toggleWindow('searchWindow')">
-  <img src="./img/icon_search.png" alt="搜尋" width="30" height="30" />
-</button>
-
-  <!-- 定位（篩選樣式） -->
-<button class="nav-btn" onclick="toggleWindow('searchWindow')">
-  <img src="./img/icon_filter.png"
- alt="搜尋" width="30" height="30" />
-</button>
-
-  <!-- 首頁（房屋圖示） -->
- <button class="nav-btn" onclick="toggleWindow('searchWindow')">
-  <img src="./img/icon_home.png"
- alt="搜尋" width="30" height="30" />
-</button>
-
-  <!-- 收藏（愛心實心版） -->
+ <div class="bottom-nav">
+  <!-- 🔍 搜尋 -->
   <button class="nav-btn" onclick="toggleWindow('searchWindow')">
-  <img src="./img/icon_heart.png"
- alt="搜尋" width="30" height="30" />
-</button>
+    <img src="./img/icon_search.png" alt="搜尋" width="30" height="30" />
+  </button>
 
-  <!-- 選單（三條線） -->
-  <button class="nav-btn" onclick="toggleWindow('searchWindow')">
-  <img src="./img/icon_menu.png"
- alt="搜尋" width="30" height="30" />
-</button>
+  <!-- 🧊 篩選 -->
+  <button class="nav-btn" onclick="toggleWindow('filterWindow')">
+    <img src="./img/icon_filter.png" alt="篩選" width="30" height="30" />
+  </button>
+
+  <!-- 🏠 首頁 -->
+  <button class="nav-btn" onclick="closeExpandedCard()">
+    <img src="./img/icon_home.png" alt="首頁" width="30" height="30" />
+  </button>
+
+  <!-- ❤️ 收藏 -->
+  <button class="nav-btn" onclick="toggleWindow('favoriteWindow')">
+    <img src="./img/icon_heart.png" alt="收藏" width="30" height="30" />
+  </button>
+
+  <!-- ☰ 漢堡選單 -->
+  <button class="nav-btn" onclick="toggleWindow('menuWindow')">
+    <img src="./img/icon_menu.png" alt="選單" width="30" height="30" />
+  </button>
 </div>
 
   <!-- Google Maps JS + 假資料與互動邏輯 -->
