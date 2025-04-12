@@ -637,11 +637,12 @@ document.getElementById('cardWrapper').addEventListener('scroll', function () {
       stores.forEach((s, i) => {
         const div = document.createElement('div');
         div.className = 'store-card';
-        div.innerHTML = `
-          <div class="title">${s.name}</div>
-          <div class="info">${s.services}</div>
-          <div class="info">距離：約 1km</div>
-        `;
+       div.innerHTML = `
+  <div class="title">${s.name}</div>
+  <div class="info">${s.services}</div>
+  <div class="info">預約方式：${s.reservation}</div>
+  <div class="info">${s.distance}・${s.region}</div>
+`;
         div.onclick = () => updateCardUI(i, true);
         wrapper.appendChild(div);
       });
