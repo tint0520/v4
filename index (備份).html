@@ -37,7 +37,7 @@
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: #F8F5EF;
+  background: #F8F0E2;
   border-radius: 20px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   display: flex;
@@ -52,9 +52,9 @@
   border-radius: 50%;
   transition: background 0.3s ease;
 }
-.nav-btn:hover {
+/* .nav-btn:hover {
   background: rgba(0, 0, 0, 0.04);
-}
+} */
 
   .card-container {
   position: absolute;
@@ -250,44 +250,30 @@
   </div>
 
   <!-- 底部選單 -->
-  <div class="bottom-nav">
-  <!-- 放大鏡（搜尋） -->
+ <div class="bottom-nav">
+  <!-- 🔍 搜尋 -->
   <button class="nav-btn" onclick="toggleWindow('searchWindow')">
-    <svg viewBox="0 0 24 24" width="26" height="26" stroke="#A78D6A" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="11" cy="11" r="7.5"/>
-      <line x1="17" y1="17" x2="21" y2="21"/>
-    </svg>
+    <img src="./img/icon_search.png" alt="搜尋" width="30" height="30" />
   </button>
 
-  <!-- 定位（箭頭樣式） -->
-  <button class="nav-btn" onclick="centerOnGPS()">
-    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#A78D6A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 2L13.5 10H18L12 22L6 10H10.5L12 2Z" />
-    </svg>
+  <!-- 🧊 篩選 -->
+  <button class="nav-btn" onclick="toggleWindow('filterWindow')">
+    <img src="./img/icon_filter.png" alt="篩選" width="30" height="30" />
   </button>
 
-  <!-- 首頁（房屋圖示） -->
+  <!-- 🏠 首頁 -->
   <button class="nav-btn" onclick="closeExpandedCard()">
-    <svg viewBox="0 0 24 24" width="26" height="26" stroke="#A78D6A" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4 12L12 5L20 12"/>
-      <path d="M8 12V20H16V12"/>
-    </svg>
+    <img src="./img/icon_home.png" alt="首頁" width="30" height="30" />
   </button>
 
-  <!-- 收藏（愛心實心版） -->
+  <!-- ❤️ 收藏 -->
   <button class="nav-btn" onclick="toggleWindow('favoriteWindow')">
-    <svg viewBox="0 0 24 24" width="26" height="26" fill="#A78D6A">
-      <path d="M12 21C12 21 5 14.8 5 9.5C5 6.42 7.42 4 10.5 4C12.24 4 13.91 4.81 15 6.08C16.09 4.81 17.76 4 19.5 4C22.58 4 25 6.42 25 9.5C25 14.8 18 21 18 21H12Z"/>
-    </svg>
+    <img src="./img/icon_heart.png" alt="收藏" width="30" height="30" />
   </button>
 
-  <!-- 選單（三條線） -->
+  <!-- ☰ 漢堡選單 -->
   <button class="nav-btn" onclick="toggleWindow('menuWindow')">
-    <svg viewBox="0 0 24 24" width="26" height="26" stroke="#A78D6A" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="4" y1="6" x2="20" y2="6"/>
-      <line x1="4" y1="12" x2="20" y2="12"/>
-      <line x1="4" y1="18" x2="20" y2="18"/>
-    </svg>
+    <img src="./img/icon_menu.png" alt="選單" width="30" height="30" />
   </button>
 </div>
 
