@@ -386,11 +386,18 @@ function updateCardUI(index) {
 
   activeIndex = index;
   const s = stores[index];
+
+  // ✅ 改寫為先 setCenter，等地圖 idle 完成後再 panBy
   map.setCenter({ lat: s.lat, lng: s.lng });
 
+  // ✅ 為避免地圖變灰，先 clear 一次事件再觸發
+  google.maps.event.clearListeners(map, "idle");
+
   google.maps.event.addListenerOnce(map, "idle", function () {
-    const mapHeight = document.getElementById("map").offsetHeight;
-    map.panBy(0, mapHeight / 3);
+    setTimeout(() => {
+      const mapHeight = document.getElementById("map").offsetHeight;
+      map.panBy(0, mapHeight / 3);
+    }, 10); // 加一點點延遲讓地圖完成渲染
   });
 }
 
