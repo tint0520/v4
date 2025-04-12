@@ -612,7 +612,7 @@ document.getElementById('cardWrapper').addEventListener('scroll', function () {
 
   // 若滑動到新卡片就更新地圖位置
   if (closestIndex !== activeIndex) {
-    updateCardUI(closestIndex, true);
+    updateCardUI(closestIndex);
   }
 });
       });
@@ -647,9 +647,12 @@ document.getElementById('cardWrapper').addEventListener('scroll', function () {
       document.getElementById('btnNav').href = s.nav;
       document.getElementById('btnBook').href = s.book;
       map.panTo({ lat: s.lat, lng: s.lng });
-      if (open) document.getElementById('expandedCard').classList.add('active');
-    }
-
+  if (open) {
+    const card = document.getElementById('expandedCard');
+    card.classList.remove('active');
+    setTimeout(() => card.classList.add('active'), 10);
+  }
+} // ✅ ←←← 你只要補這一行，就一切正常！
     function closeExpandedCard() {
       document.getElementById('expandedCard').classList.remove('active');
     }
