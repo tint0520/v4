@@ -262,24 +262,21 @@ navigator.geolocation.getCurrentPosition(pos => {
           ? `${Math.round(distanceMeters)}m`
           : `${(distanceMeters / 1000).toFixed(1)}km`;
 
-        return {
-          name: row.name,
-          lat: parseFloat(row.lat),
-          lng: parseFloat(row.lng),
-          image: row.image,
-          time: row.time,
-          services: row.services,
-          reservation: row.reservation,
-          region: row.region,
-          distance: distanceText
-        };
-      });
+         return {
+      name: row.name,
+      lat: parseFloat(row.lat),
+      lng: parseFloat(row.lng),
+      image: row.image,
+      time: row.time,
+      services: row.services,
+      reservation: row.reservation,
+      region: row.region,
+      distance: distanceText
+    };
+  });
 
-      initMap({ lat: userLat, lng: userLng });
-    });
-}, err => {
-  alert("⚠️ 無法取得您的定位，請開啟 GPS 或允許權限");
-});
+  // ✅ 接下來正確順序
+  const userPos = { lat: userLat, lng: userLng };
 
 
   userMarker = new google.maps.Marker({
