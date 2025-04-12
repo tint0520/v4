@@ -2,774 +2,705 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tint Maps 完整首頁</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tint Maps DEMO</title>
+<!-- 🔽 你把這段貼在這裡 🔽 -->
 
-  <!-- ✅ PWA & iOS fullscreen settings (unchanged) -->
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#ffffff" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <link rel="apple-touch-icon" href="./img/icon_192.png" />
+<!-- Favicon 與 PWA App Icon 設定 -->
+<link rel="manifest" href="./manifest.json" />
+<link rel="apple-touch-icon" href="./img/icon_192.png" />
+<link rel="icon" href="./img/icon_192.png" sizes="192x192" />
+<link rel="icon" href="./img/icon_512.png" sizes="512x512" />
+<meta name="theme-color" content="#ffffff" />
 
+<!-- 🔼 上面貼完之後繼續接著下面這行 🔼 -->
+  
   <style>
-    /* 🎨 Define theme color variables (Soft Pink Pastels) */
-    :root {
-      --bg: #FFF0F5;         /* Background base color */
-      --primary: #F5A6CD;    /* Primary color for icons/buttons */
-      --hover: #D08DAE;      /* Hover state color */
-      --text: #4A4A4A;       /* Text color (dark gray) */
-      --border: #f7d7e5;     /* Border color (light pink) */
-      --tag-bg: #fce5ee;     /* Tag/Chip background (soft pink) */
-    }
-
-    * { box-sizing: border-box; }
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       font-family: 'Noto Sans TC', sans-serif;
-      background-color: var(--bg);   /* Updated app background color */
-      color: var(--text);           /* Default text color (dark gray) */
+      height: 100%;
+      overflow: hidden;
+      background-color: #fefcf9;
     }
-
-    /* 🧾 Base container with white background and pink border */
-   .wrapper {
-  width: 100%;
-  height: 100vh;
-  max-width: 420px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  background-color: #fff;
-  border: 1px solid var(--border);
-  box-shadow: 0 0 40px rgba(0,0,0,0.05);
-  /* ⛔ 移除 padding-top 和 padding-bottom */
-}
-
-    .top-bar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      padding: 16px;
-      background: #fff;
-      z-index: 1000;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    }
-
-    .search-box {
-      flex: 1;
-      background: #fff;
-      border-radius: 999px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      border: 1px solid var(--border);   /* Pink border for search box */
-      cursor: pointer;
-    }
-    /* Adjust search icon style (inline SVG) */
-    .search-box svg {
-      width: 18px;
-      margin-right: 8px;
-      opacity: 0.6;
-    }
-
-    .filter-icon {
-      /* Filter/locate button uses primary color background */
-      background: var(--primary);
-      border-radius: 999px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-      padding: 10px;
-      margin-left: 12px;
-      cursor: pointer;
-    }
-    /* (If any filter icon SVG is used, it would inherit currentColor for its strokes) */
-
-#map {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  width: 100%;
-  z-index: 0;
-}
-    .dot {
+    #map {
       position: absolute;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      z-index: 1;
     }
-    .dot.small {
-      width: 12px; height: 12px;
-      background: #f6a1a1;
-    }
-    .dot.active {
-      width: 26px; height: 26px;
-      background: #ec5c5c;
-      box-shadow: 0 0 10px rgba(255, 100, 100, 0.5);
-    }
-    .map-overlay {
-      position: fixed;
-      top: 0; bottom: 0; left: 0; right: 0;
-      z-index: 900;
-      display: none;
-    }
-
-    .store-card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 16px 20px;
-      position: fixed;
-      bottom: 70px;
-      left: 16px; right: 16px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      border: 1px solid var(--border);   /* Added light pink border around card */
-      z-index: 1001;
-      overscroll-behavior: contain;
-  touch-action: pan-y;
-    }
-    .store-card h2 {
-      font-size: 18px;
-      margin: 0 0 6px;
-      color: var(--text);   /* Unified text color */
-    }
-    .store-card .info {
-      font-size: 14px;
-      color: var(--text);   /* Unified text color */
-      margin-bottom: 4px;
-    }
-    .store-card .distance {
-      font-size: 13px;
-      color: var(--text);   /* Unified text color (was #999) */
-    }
-    .tags {
-      display: flex;
-      gap: 8px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-    .tags span {
-      background: var(--tag-bg);    /* Soft pink background for tags */
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      color: var(--text);          /* Tag text in dark gray */
-    }
-
-    /* 📱 Bottom navigation bar: white background, pink border, inline SVG icons */
     .bottom-nav {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      height: 72px;
-      background: #fff;
-      border-top: 1px solid var(--border);  /* Pink top border */
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 1000;
-      color: var(--primary);       /* Default icon color (primary pink) */
-    }
-    .bottom-nav svg {
-      width: 36px;
-      height: 36px;
-      cursor: pointer;
-      transition: color 0.3s;
-      /* Icons use currentColor for strokes/fills, so they inherit .bottom-nav color */
-    }
-    .bottom-nav svg:hover {
-      color: var(--hover);         /* Hover state: change icon color to hover pink */
-    }
-
-.search-overlay {
   position: fixed;
-  top: 0;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #F8F5EF;
+  border-radius: 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  display: flex;
+  gap: 28px;
+  padding: 10px 20px;
+  z-index: 1000;
+}
+.nav-btn {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+}
+.nav-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+  .card-container {
+  position: absolute;
+  bottom: 100px;
   left: 0;
   right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 998;
-  padding: 80px 16px 30px; /* ✅ 頂部 padding 留空給 .top-bar */
-  border-radius: 20px 20px 0 0;
-  box-shadow: 0 -6px 30px rgba(0,0,0,0.1);
-  max-width: 420px;
-  margin: auto;
-  overflow-y: auto;
-}
-.favorite-view,
-.menu-overlay {
-  position: fixed;
-  top: 0; bottom: 0; left: 0; right: 0;
-  background: #fff;
-  z-index: 998;
-  padding: 24px 16px;
-  overflow-y: auto;
-  display: none;
-}
-    .search-header, .favorite-header, .menu-header {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom:0px;
-      color: var(--text);
-    }
-    .chip-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .chip {
-      background: var(--primary);   /* Filter chips use primary color */
-      color: #fff;                 /* Chip text in white for contrast */
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .chip:hover {
-      background: var(--hover);    /* Chip hover uses hover color */
-    }
-    .apply-btn {
-      width: 100%;
-      padding: 12px;
-      background: var(--primary);  /* Primary color background for apply button */
-      color: #fff;
-      font-size: 15px;
-      font-weight: bold;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .apply-btn:hover {
-      background: var(--hover);    /* Hover state for apply button */
-    }
-    .menu-btn {
-      padding: 14px;
-      font-size: 15px;
-      border: 1px solid var(--border);  /* Pink border for menu buttons */
-      border-radius: 12px;
-      background: #fff;                /* White background for menu items */
-      cursor: pointer;
-      margin-bottom: 12px;
-    }
-    .menu-btn:hover {
-      background: var(--primary);
-      color: #fff;
-    }
-    .expanded-card {
-      display: none;
-      position: fixed;
-      bottom: 80px;
-      left: 16px; right: 16px;
-      z-index: 902;
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      padding: 20px;
-      max-width: 420px;
-      margin: auto;
-      overscroll-behavior: contain;
-  touch-action: pan-y;
-    }
-    .card-header img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 12px;
-      display: block;
-    }
-    .icon-btn {
-      /* (No changes here if not used; replaced by inline SVGs) */
-      width: 24px;
-      height: 24px;
-      object-fit: contain;
-      display: inline-block;
-      vertical-align: middle;
-    }
-    .fav-card {
-      display: flex;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-    .fav-card img {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-right: 12px;
-    }
-    .fav-card .info h3 {
-      margin: 0 0 4px;
-      font-size: 16px;
-      color: var(--text);
-    }
-    .fav-card .info p {
-      margin: 0;
-      font-size: 14px;
-      color: var(--text);
-    }
-/* ✅ 卡片內按鈕 hover 動畫效果 */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 999px;
-  background-color: var(--primary);
-  transition: all 0.3s ease;
-}
-.btn:hover {
-  transform: scale(1.08);
-  filter: brightness(1.1);
+  z-index: 5;
+  overflow-x: auto; /* ✅ 改為讓整個區塊可橫向滑動 */
+  -webkit-overflow-scrolling: touch;
+  pointer-events: all;
 }
 
-/* 各按鈕 hover 背景亮化（可自訂粉色變化） */
-.btn.line:hover {
-  background-color: #ffd8b0; /* 淡橘粉（LINE） */
+.card-wrapper {
+  display: flex;
+  gap: 12px;
+  padding: 0 20px;
+  min-width: max-content; /* ✅ 自動撐開寬度以容納所有卡片 */
+  scroll-snap-type: x mandatory;
 }
-.btn.ig:hover {
-  background-color: #f9c7e5; /* 柔粉（IG） */
-}
-.btn.nav:hover {
-  background-color: #ffccd6; /* 粉紅（導航） */
-}
-.btn.book:hover {
-  background-color: #f5b8d1; /* 桃粉（預約） */
-}
-/* ✅ 卡片四顆 icon 樣式 - inline SVG 圓底白線風格 */
-.btn {
-  width: 56px;
-  height: 56px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 6px;
-  border-radius: 50%;
-  background: none;
-  padding: 0;
-  border: none;
-  box-shadow: none;
+
+.store-card {
+  flex: 0 0 auto; /* ✅ 確保每張卡片不被壓縮 */
+  width: 280px;
+  scroll-snap-align: center;
+  background: #fffdf9;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  padding: 16px;
+  transition: transform 0.3s ease;
   cursor: pointer;
 }
-.icon-svg {
-  width: 48px;
-  height: 48px;
+    .store-card .title {
+  font-weight: 700;
+  font-size: 18px; /* ✅ 加大一階 */
+  margin-bottom: 6px;
+  color: #3e2e26; /* ✅ 可選：讓顏色再深一點點 */
 }
+    .store-card .info {
+      font-size: 14px;
+      color: #7d756c;
+    }
 
+<!-- 第二份貼這裡 -->
+
+
+        /* 展開卡片與浮窗 */
+    .expanded-card {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      width: 90%;
+      max-width: 400px;
+      background: #fffefb;
+      border-radius: 20px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+      z-index: 15;
+      opacity: 0;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+    .expanded-card.active {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .expanded-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 20px 20px 0 0;
+    }
+    .expanded-card .details {
+      padding: 16px;
+    }
+    .expanded-card .details h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      color: #3e3a36;
+    }
+    .expanded-card .details p {
+      margin: 6px 0;
+      font-size: 14px;
+      color: #665d55;
+    }
     .action-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: space-between;
-  padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+    }
+    .action-buttons .icon-btn {
+      width: 48px;
+      height: 48px;
+      background: #f5f2ec;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+    .action-buttons .icon-btn:hover {
+      transform: scale(1.08);
+    }
+
+   .floating-window {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  background: #ffffff;
+  width: 300px; /* ✅ 改成固定寬度與選單一致 */
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  padding: 20px;
+  z-index: 20;
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
+    .floating-window.active {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .floating-window .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      color: #999;
+      cursor: pointer;
+    }
+
+    /* Scroll bar hidden for webkit */
+    .card-wrapper::-webkit-scrollbar {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <div class="wrapper">
-    <div class="top-bar">
-      <div class="search-box">
-        <!-- 🔍 Search icon (inline SVG) -->
-        <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="232" cy="232" r="136" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
-          <line x1="336" y1="336" x2="448" y2="448" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span>搜尋地點 / 店名 / 服務</span>
-      </div>
-      <!-- 🧭 Removed top-right locate button (moved to bottom nav) 
-      <div class="filter-icon" id="locate-btn">
-        <img src="./img/icon_location.png" />
-      </div>
-      -->
-    </div>
+  <div id="map"></div>
 
-    <div class="map" id="map"></div>
-    <div class="map-overlay"></div>
-<!-- ✅ 展開卡片（.expanded-card） -->
-<div class="expanded-card" data-id="store2">
-  <div class="card-header">
-    <img src="./img/sample_photo.jpg" alt="店家圖片">
-  </div>
-  <h2>time nailart 好時質甲</h2>
-  <div class="info">美甲 / 美睫・預約制</div>
-  <div class="distance">0.5 公里・台北市中山區</div>
-  <div class="tags">
-    <span>預約 / 美睫</span>
-    <span>預約制</span>
-    <span>0.5 公里</span>
-  </div>
-  <div class="action-buttons">
-    <!-- 💬 LINE -->
-    <a href="#" class="btn line">
-      <svg viewBox="0 0 512 512" class="icon-svg">
-        <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
-        <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle"
-              fill="white" font-size="110" font-family="Arial, sans-serif" font-weight="bold">LINE</text>
-      </svg>
-    </a>
-
-    <!-- 📸 Instagram -->
-    <a href="#" class="btn ig">
-      <svg viewBox="0 0 512 512" class="icon-svg">
-        <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
-        <path d="M349.33,69.33H162.67A93.34,93.34,0,0,0,69.33,162.67v186.66A93.34,93.34,0,0,0,162.67,442.67h186.66A93.34,93.34,0,0,0,442.67,349.33V162.67A93.34,93.34,0,0,0,349.33,69.33ZM256,352a96,96,0,1,1,96-96A96.11,96.11,0,0,1,256,352Zm106.67-170.67a21.33,21.33,0,1,1,21.33-21.33A21.34,21.34,0,0,1,362.67,181.33Z"
-          stroke="white" stroke-width="20" fill="none"/>
-      </svg>
-    </a>
-
-    <!-- 📍 Navigation -->
-    <a href="#" class="btn nav">
-      <svg viewBox="0 0 512 512" class="icon-svg">
-        <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
-        <polyline points="160 352 352 160" stroke="white" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <polygon points="160 352 272 288 224 240 160 352" fill="white"/>
-      </svg>
-    </a>
-
-    <!-- 📅 預約 -->
-    <a href="#" class="btn book">
-      <svg viewBox="0 0 512 512" class="icon-svg">
-        <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
-        <rect x="128" y="160" width="256" height="192" rx="16" fill="none" stroke="white" stroke-width="20"/>
-        <line x1="128" y1="200" x2="384" y2="200" stroke="white" stroke-width="20"/>
-        <line x1="192" y1="256" x2="320" y2="256" stroke="white" stroke-width="20"/>
-      </svg>
-    </a>
-  </div>
-</div>
-    <div class="store-card" data-id="store2">
-      <h2>time nailart 好時質甲</h2>
-      <div class="info">美甲 / 美睫・預約制</div>
-      <div class="distance">0.5 公里・台北市中山區</div>
-      <div class="tags">
-        <span>預約 / 美睫</span>
-        <span>預約制</span>
-        <span>0.5 公里</span>
+  <!-- 展開卡片容器 -->
+  <div id="expandedCard" class="expanded-card">
+    <img id="cardImage" src="" alt="店家照片">
+    <div class="details">
+      <h3 id="cardTitle">店名</h3>
+      <p id="cardTime">營業時間</p>
+      <p id="cardServices">服務項目</p>
+      <p id="cardAbout">店家介紹</p>
+      <div class="action-buttons">
+        <a id="btnLine" class="icon-btn" target="_blank" title="LINE">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#7f7263" fill="none" stroke-width="2"><path d="M3 12a9 9 0 0118 0c0 4.418-3.582 8-8 8h-1l-4 2v-2H8a9 9 0 01-5-8z"/></svg>
+        </a>
+        <a id="btnIG" class="icon-btn" target="_blank" title="Instagram">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#7f7263" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17" y1="7" x2="17" y2="7"/></svg>
+        </a>
+        <a id="btnNav" class="icon-btn" target="_blank" title="導航">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#7f7263" fill="none" stroke-width="2"><polygon points="12 2 19 21 12 17 5 21 12 2"/></svg>
+        </a>
+        <a id="btnBook" class="icon-btn" target="_blank" title="立即預約">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#7f7263" fill="none" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 10h16"/></svg>
+        </a>
       </div>
     </div>
+  </div>
 
-    <div class="bottom-nav">
-      <!-- 📱 Bottom nav 5 inline SVG icons: Search, GPS, Home, Favorite, Menu -->
-      <!-- Search icon -->
-      <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="232" cy="232" r="136" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
-        <line x1="336" y1="336" x2="448" y2="448" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <!-- GPS (Locate) icon -->
-      <svg id="locate-btn" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="256" y1="96" x2="256" y2="56" stroke="currentColor" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
-        <line x1="256" y1="456" x2="256" y2="416" stroke="currentColor" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
-        <line x1="416" y1="256" x2="456" y2="256" stroke="currentColor" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
-        <line x1="56" y1="256" x2="96" y2="256" stroke="currentColor" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="256" cy="256" r="144" stroke="currentColor" stroke-width="32" fill="none" stroke-miterlimit="10"/>
-      </svg>
-      <!-- Home icon -->
-      <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M80 212V448a16 16 0 0 0 16 16h96V328a24 24 0 0 1 24-24h80a24 24 0 0 1 24 24V464h96a16 16 0 0 0 16-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-        <path d="M480 256L266.89 52c-5 5.28-16.69 5.34-21.78 0L32 256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-        <polyline points="400 179 400 64 352 64 352 133" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-      </svg>
-      <!-- Favorite (Heart) icon -->
-      <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M352.92 80C288 80 256 144 256 144s-32-64-96.92-64C106.32 80 64.54 124.14 64 176.81c-1.1 109.33 86.73 187.08 183 252.42a16 16 0 0 0 18 0c96.26-65.34 184.09-143.09 183-252.42C447.46 124.14 405.68 80 352.92 80Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-      </svg>
-      <!-- Menu (Hamburger) icon -->
-      <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="96" y1="160" x2="416" y2="160" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-        <line x1="96" y1="256" x2="416" y2="256" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-        <line x1="96" y1="352" x2="416" y2="352" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-      </svg>
+<!-- 第三份貼這裡 -->
+
+
+    <!-- 店家卡片滑動容器 -->
+  <div class="card-container">
+    <div class="card-wrapper" id="cardWrapper">
+      <!-- JS會動態插入卡片 -->
     </div>
+  </div>
 
-   <div class="action-buttons">
-  <!-- 💬 LINE -->
-  <a href="#" class="btn line">
-    <svg viewBox="0 0 512 512" class="icon-svg">
-      <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
-      <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle"
-            fill="white" font-size="110" font-family="Arial, sans-serif" font-weight="bold">LINE</text>
-    </svg>
-  </a>
+  <!-- 浮窗區塊：搜尋 / 收藏 / 選單 -->
+  <div id="searchWindow" class="floating-window">
+    <button class="close-btn" onclick="closeWindow('searchWindow')">×</button>
+    <h3>搜尋與篩選</h3>
+    <input type="text" placeholder="搜尋地區、關鍵字..." style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;margin:12px 0;" />
+    <p style="font-size:14px;color:#666;">可篩選：地區 / 類型 / 預約方式</p>
+  </div>
+  <div id="favoriteWindow" class="floating-window">
+    <button class="close-btn" onclick="closeWindow('favoriteWindow')">×</button>
+    <h3>收藏清單</h3>
+    <p>尚無收藏的店家</p>
+  </div>
+  <div id="menuWindow" class="floating-window">
+    <button class="close-btn" onclick="closeWindow('menuWindow')">×</button>
+    <h3>更多選項</h3>
+    <p>功能建置中</p>
+  </div>
 
-  <!-- 📸 Instagram -->
-  <a href="#" class="btn ig">
-    <svg viewBox="0 0 512 512" class="icon-svg">
-      <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
-      <path d="M349.33,69.33H162.67A93.34,93.34,0,0,0,69.33,162.67v186.66A93.34,93.34,0,0,0,162.67,442.67h186.66A93.34,93.34,0,0,0,442.67,349.33V162.67A93.34,93.34,0,0,0,349.33,69.33ZM256,352a96,96,0,1,1,96-96A96.11,96.11,0,0,1,256,352Zm106.67-170.67a21.33,21.33,0,1,1,21.33-21.33A21.34,21.34,0,0,1,362.67,181.33Z"
-        stroke="white" stroke-width="20" fill="none"/>
+  <!-- 底部選單 -->
+  <div class="bottom-nav">
+  <!-- 放大鏡（搜尋） -->
+  <button class="nav-btn" onclick="toggleWindow('searchWindow')">
+    <svg viewBox="0 0 24 24" width="26" height="26" stroke="#A78D6A" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="7.5"/>
+      <line x1="17" y1="17" x2="21" y2="21"/>
     </svg>
-  </a>
+  </button>
 
-  <!-- 📍 Navigation -->
-  <a href="#" class="btn nav">
-    <svg viewBox="0 0 512 512" class="icon-svg">
-      <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
-      <polyline points="160 352 352 160" stroke="white" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      <polygon points="160 352 272 288 224 240 160 352" fill="white"/>
+  <!-- 定位（箭頭樣式） -->
+  <button class="nav-btn" onclick="centerOnGPS()">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#A78D6A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L13.5 10H18L12 22L6 10H10.5L12 2Z" />
     </svg>
-  </a>
+  </button>
 
-  <!-- 📅 預約 -->
-  <a href="#" class="btn book">
-    <svg viewBox="0 0 512 512" class="icon-svg">
-      <circle cx="256" cy="256" r="256" fill="#F5A6CD"/>
-      <rect x="128" y="160" width="256" height="192" rx="16" fill="none" stroke="white" stroke-width="20"/>
-      <line x1="128" y1="200" x2="384" y2="200" stroke="white" stroke-width="20"/>
-      <line x1="192" y1="256" x2="320" y2="256" stroke="white" stroke-width="20"/>
+  <!-- 首頁（房屋圖示） -->
+  <button class="nav-btn" onclick="closeExpandedCard()">
+    <svg viewBox="0 0 24 24" width="26" height="26" stroke="#A78D6A" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 12L12 5L20 12"/>
+      <path d="M8 12V20H16V12"/>
     </svg>
-  </a>
+  </button>
+
+  <!-- 收藏（愛心實心版） -->
+  <button class="nav-btn" onclick="toggleWindow('favoriteWindow')">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="#A78D6A">
+      <path d="M12 21C12 21 5 14.8 5 9.5C5 6.42 7.42 4 10.5 4C12.24 4 13.91 4.81 15 6.08C16.09 4.81 17.76 4 19.5 4C22.58 4 25 6.42 25 9.5C25 14.8 18 21 18 21H12Z"/>
+    </svg>
+  </button>
+
+  <!-- 選單（三條線） -->
+  <button class="nav-btn" onclick="toggleWindow('menuWindow')">
+    <svg viewBox="0 0 24 24" width="26" height="26" stroke="#A78D6A" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="4" y1="6" x2="20" y2="6"/>
+      <line x1="4" y1="12" x2="20" y2="12"/>
+      <line x1="4" y1="18" x2="20" y2="18"/>
+    </svg>
+  </button>
 </div>
 
-    <!-- 收藏頁 (Favorites view) -->
-    <div class="favorite-view">
-      <div class="favorite-header">我的收藏</div>
-      <div class="favorite-list">
-        <div class="fav-card">
-          <img src="./img/sample_photo.jpg" alt="收藏店家圖片">
-          <div class="info">
-            <h3>Rose Beauty</h3>
-            <p>美甲 / 美睫・預約制</p>
-          </div>
-        </div>
-        <div class="fav-card">
-          <img src="./img/sample_photo.jpg" alt="收藏店家圖片">
-          <div class="info">
-            <h3>Jin Beauty</h3>
-            <p>美體 / 按摩・現場可接</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 漢堡選單浮窗 (Menu overlay) -->
-    <div class="menu-overlay">
-      <div class="menu-header">功能選單</div>
-      <div class="menu-options">
-        <button class="menu-btn">店家上架</button>
-        <button class="menu-btn">店家上架</button>
-        <button class="menu-btn">店家上架</button>
-        <button class="menu-btn">店家上架</button>
-      </div>
- </div>
-    <div class="section">
-      <div class="section-title" style="font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 10px;">服務分類</div>
-      <div class="chip-group" style="display: flex; flex-wrap: wrap; gap: 10px;">
-        <span class="chip">美甲</span>
-        <span class="chip">美睫</span>
-        <span class="chip">美容</span>
-        <span class="chip">紋繡</span>
-        <span class="chip">美體</span>
-      </div>
-    </div>
-    <button class="apply-btn" style="margin-top: 20px;">套用篩選</button>
-  </div>
-</div>
-
-<script>
-  document.querySelectorAll('.chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      chip.classList.toggle('active');
-    });
-  });
-
-  document.querySelector('.apply-btn')?.addEventListener('click', () => {
-    alert("已套用篩選條件！（目前為 UI 模擬）");
-  });
-</script>
-
-
+  <!-- Google Maps JS + 假資料與互動邏輯 -->
   <script>
-   window.onload = () => {
-     const locateBtn = document.querySelector(".bottom-nav svg:nth-child(2)");
-const heartBtn = document.querySelector(".bottom-nav svg:nth-child(4)");
-  const menuBtn = document.querySelector(".bottom-nav svg:nth-child(5)");
-  const homeBtn = document.querySelector(".bottom-nav svg:nth-child(3)");
-  const searchBtn = document.querySelector(".bottom-nav svg:nth-child(1)");
-  const searchBox = document.querySelector(".search-box");
-  const searchClose = document.querySelector(".search-close");
-
-
-     
-  const storeCard = document.querySelector(".store-card");
-  const expandedCard = document.querySelector(".expanded-card");
-  const mapOverlay = document.querySelector(".map-overlay");
-
-  const favoriteView = document.querySelector(".favorite-view");
-  const menuOverlay = document.querySelector(".menu-overlay");
-  const searchOverlay = document.querySelector(".search-overlay");
-
-  // 加入防呆判斷，避免報錯
-  if (storeCard && expandedCard && mapOverlay) {
-    // 點小卡片 → 展開大卡
-    storeCard.addEventListener("click", () => {
-      expandedCard.style.display = "block";
-      expandedCard.classList.add("card-animate");
-      storeCard.style.display = "none";
-      mapOverlay.style.display = "block";
-
-      favoriteView && (favoriteView.style.display = "none");
-      menuOverlay && (menuOverlay.style.display = "none");
-      searchOverlay && (searchOverlay.style.display = "none");
-
-      const storeId = storeCard.getAttribute("data-id");
-      activateDot(storeId);
-    });
-
-    // 展開卡片滑下收回
-    let startY = 0;
-    let isDragging = false;
-    expandedCard.addEventListener("touchstart", (e) => {
-      startY = e.touches[0].clientY;
-      isDragging = true;
-    });
-    expandedCard.addEventListener("touchmove", (e) => {
-      if (!isDragging) return;
-      const diffY = e.touches[0].clientY - startY;
-      if (diffY > 60) {
-        expandedCard.style.display = "none";
-        expandedCard.classList.remove("card-animate");
-        storeCard.style.display = "block";
-        mapOverlay.style.display = "none";
-        isDragging = false;
-      }
-    });
-    expandedCard.addEventListener("touchend", () => {
-      isDragging = false;
-    });
-
-    // 小卡片上滑展開大卡
-    let cardStartY = 0;
-    let cardDragging = false;
-    storeCard.addEventListener("touchstart", (e) => {
-      cardStartY = e.touches[0].clientY;
-      cardDragging = true;
-    });
-    storeCard.addEventListener("touchmove", (e) => {
-      if (!cardDragging) return;
-      const diffY = e.touches[0].clientY - cardStartY;
-      if (diffY < -60) {
-        expandedCard.style.display = "block";
-        expandedCard.classList.add("card-animate");
-        storeCard.style.display = "none";
-        mapOverlay.style.display = "block";
-        cardDragging = false;
-      }
-    });
-    storeCard.addEventListener("touchend", () => {
-      cardDragging = false;
-    });
+    let map, userMarker, activeIndex = 0;
+    const stores = [
+       {
+    name: '柔柔美甲小舖',
+    lat: 25.0452, lng: 121.5318,
+    image: 'https://images.unsplash.com/photo-1606312619344-500082ba8de6',
+    time: '11:00 - 20:00',
+    services: '美甲 / 凝膠 / 手護理',
+    reservation: 'LINE 預約',
+    region: '台北市大安區',
+    distance: '300m',
+    intro: '一間專屬女生的柔美空間，提供高質感凝膠造型與客製設計。',
+    ig: 'https://instagram.com',
+    line: 'https://line.me',
+    nav: 'https://maps.google.com?q=25.0452,121.5318',
+    book: '#'
+  },
+  {
+    name: '小南美睫空間',
+    lat: 24.1477, lng: 120.6736,
+    image: 'https://images.unsplash.com/photo-1594737625785-cdfebd7a9d0a',
+    time: '10:00 - 19:00',
+    services: '日式美睫 / 卸睫 / 保養',
+    reservation: 'IG 私訊',
+    region: '台中市西區',
+    distance: '1.2km',
+    intro: '專業美睫師為您打造自然感電眼，舒適空間放鬆享受。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '粉棕工作室',
+    lat: 22.6273, lng: 120.3014,
+    image: 'https://images.unsplash.com/photo-1589998059171-988d887df646',
+    time: '12:00 - 21:00',
+    services: '美甲 / 預約制 / 獨立空間',
+    reservation: '表單填寫',
+    region: '高雄市新興區',
+    distance: '2.0km',
+    intro: '藏身市中心的秘密工作室，適合享受靜謐服務的妳。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },  {
+    name: '琉璃美甲藝術',
+    lat: 25.0329, lng: 121.5654,
+    image: 'https://images.unsplash.com/photo-1604014238631-76e91f3b0b7f',
+    time: '10:30 - 20:00',
+    services: '凝膠彩繪 / 基礎保養',
+    reservation: 'LINE 預約',
+    region: '台北市信義區',
+    distance: '600m',
+    intro: '主打手繪凝膠彩繪，每雙手都是獨一無二的藝術品。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '小月光睫毛設計',
+    lat: 24.9921, lng: 121.3017,
+    image: 'https://images.unsplash.com/photo-1603575447658-3ef16d346c45',
+    time: '09:00 - 18:00',
+    services: '韓式睫毛 / 睫毛嫁接 / 卸睫',
+    reservation: 'IG 私訊',
+    region: '桃園市中壢區',
+    distance: '850m',
+    intro: '打造專屬你的清新妝感，輕盈自然無負擔。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '光森美學空間',
+    lat: 23.4801, lng: 120.4536,
+    image: 'https://images.unsplash.com/photo-1590080876211-bc0cb9bd7521',
+    time: '13:00 - 21:00',
+    services: '手足保養 / 蠟除毛',
+    reservation: '表單填寫',
+    region: '雲林縣斗六市',
+    distance: '2.4km',
+    intro: '藏匿在老街巷內的放鬆天地，專屬預約制服務。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '棉花糖工作坊',
+    lat: 24.8041, lng: 120.9711,
+    image: 'https://images.unsplash.com/photo-1624812178297-6b1f2e007064',
+    time: '11:00 - 20:00',
+    services: '粉嫩凝膠 / 手部彩繪',
+    reservation: 'LINE 預約',
+    region: '新竹市東區',
+    distance: '1.1km',
+    intro: '風格溫柔清新，適合喜愛少女色調的你。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '米花造型沙龍',
+    lat: 25.0840, lng: 121.5655,
+    image: 'https://images.unsplash.com/photo-1588776814546-b1d2b5dc726b',
+    time: '10:00 - 19:00',
+    services: '造型剪髮 / 護髮',
+    reservation: 'IG 預約連結',
+    region: '台北市松山區',
+    distance: '500m',
+    intro: '結合日系設計與個人風格，專屬的髮型提案。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '香氛指間',
+    lat: 22.9981, lng: 120.2269,
+    image: 'https://images.unsplash.com/photo-1612109378622-594f57f37c15',
+    time: '12:00 - 21:00',
+    services: '指緣保養 / 芳療護理',
+    reservation: 'LINE 私訊',
+    region: '台南市北區',
+    distance: '1.8km',
+    intro: '結合天然香氛與手部護理，療癒你的身心。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '星語睫毛小館',
+    lat: 24.1479, lng: 120.6736,
+    image: 'https://images.unsplash.com/photo-1588775567580-eed9516271ce',
+    time: '11:30 - 20:30',
+    services: '自然款睫毛 / 純手工接睫',
+    reservation: '表單填寫',
+    region: '台中市西區',
+    distance: '950m',
+    intro: '不誇張卻精緻，重現眼神的靈魂。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '蘿拉美甲居所',
+    lat: 23.4803, lng: 120.4489,
+    image: 'https://images.unsplash.com/photo-1625671035177-2e9b2b5bb02c',
+    time: '13:00 - 22:00',
+    services: '凝膠 / 延甲 / 貓眼設計',
+    reservation: 'LINE 預約',
+    region: '雲林縣斗六市',
+    distance: '2.6km',
+    intro: '專精貓眼與延甲技術，閃耀你的每一日。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '奶油日常',
+    lat: 25.0451, lng: 121.5121,
+    image: 'https://images.unsplash.com/photo-1610477291273-9202e5a87225',
+    time: '10:00 - 20:00',
+    services: '法式凝膠 / 保養護理',
+    reservation: 'IG 私訊',
+    region: '台北市中正區',
+    distance: '700m',
+    intro: '簡約生活中的柔軟小確幸。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '雲間美學',
+    lat: 22.6272, lng: 120.3016,
+    image: 'https://images.unsplash.com/photo-1599940824391-8f2a7d52935c',
+    time: '10:30 - 19:00',
+    services: '個性凝膠 / 彩繪造型',
+    reservation: 'LINE 聯絡',
+    region: '高雄市前金區',
+    distance: '1.3km',
+    intro: '自由靈魂的顏色實驗室，妳的風格妳來定義。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },  {
+    name: '橘光工作室',
+    lat: 24.9555, lng: 121.2167,
+    image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e',
+    time: '09:30 - 18:30',
+    services: '極簡美甲 / 指緣修護',
+    reservation: 'LINE 預約',
+    region: '新竹縣竹北市',
+    distance: '1.6km',
+    intro: '簡約中見精緻，喜歡自然感的妳會愛上。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '芽芽睫毛坊',
+    lat: 24.1641, lng: 120.6361,
+    image: 'https://images.unsplash.com/photo-1587005065981-1e8e682938d6',
+    time: '12:00 - 21:00',
+    services: '濃密接睫 / 睫毛護理',
+    reservation: 'IG 預約連結',
+    region: '台中市南區',
+    distance: '2.1km',
+    intro: '專屬客製眼型搭配，自然與濃密兼具。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '繭居 Nail&Life',
+    lat: 23.9739, lng: 120.9820,
+    image: 'https://images.unsplash.com/photo-1594561465259-fbc0d3016c56',
+    time: '14:00 - 22:00',
+    services: '療癒系美甲 / 自然護理',
+    reservation: 'LINE 預約',
+    region: '南投市',
+    distance: '3.4km',
+    intro: '像繭一樣溫柔包覆的美學小天地。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '晴子工作坊',
+    lat: 22.6208, lng: 120.3123,
+    image: 'https://images.unsplash.com/photo-1615371959759-47349de4b3ae',
+    time: '10:00 - 19:30',
+    services: '指尖設計 / 清新風格',
+    reservation: '表單填寫',
+    region: '高雄市苓雅區',
+    distance: '1.9km',
+    intro: '每次造訪都像陽光灑進心裡，充滿能量的空間。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '莓果甜心美甲',
+    lat: 25.0173, lng: 121.4637,
+    image: 'https://images.unsplash.com/photo-1599945468073-c844865d55ce',
+    time: '11:00 - 21:00',
+    services: '少女系凝膠 / 彩繪貼紙',
+    reservation: 'IG 私訊',
+    region: '新北市板橋區',
+    distance: '950m',
+    intro: '夢幻少女心集散地，粉嫩控的天堂。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '小井 Nail Life',
+    lat: 23.6981, lng: 120.5348,
+    image: 'https://images.unsplash.com/photo-1588776813716-35aee4eb865a',
+    time: '13:00 - 21:00',
+    services: '極簡風 / 客製彩繪',
+    reservation: 'LINE 預約',
+    region: '彰化縣員林市',
+    distance: '2.9km',
+    intro: '在小井遇見溫柔，設計從妳的故事出發。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '樂樂日式美睫',
+    lat: 24.9715, lng: 121.1911,
+    image: 'https://images.unsplash.com/photo-1606112219348-204d7d8b94ee',
+    time: '09:00 - 18:00',
+    services: '輕感睫毛 / 日式分段技法',
+    reservation: 'LINE 預約',
+    region: '桃園市楊梅區',
+    distance: '1.2km',
+    intro: '注重舒適與質感兼具的日式睫毛專門店。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '喵喵 Nail Lab',
+    lat: 24.8138, lng: 121.0291,
+    image: 'https://images.unsplash.com/photo-1590080876211-bc0cb9bd7521',
+    time: '12:00 - 21:30',
+    services: '手足凝膠 / 動物圖案',
+    reservation: 'IG 私訊',
+    region: '新竹市北區',
+    distance: '800m',
+    intro: '主打可愛手繪動物圖樣，喜歡貓貓狗狗看這邊！',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '島光美甲',
+    lat: 23.5692, lng: 119.5797,
+    image: 'https://images.unsplash.com/photo-1625187494659-b3f91a3b1ff5',
+    time: '10:30 - 19:30',
+    services: '凝膠指彩 / 海系風格',
+    reservation: '表單預約',
+    region: '澎湖縣馬公市',
+    distance: '5.1km',
+    intro: '靈感來自島嶼日光，專屬你的夏日色彩。',
+    ig: '#', line: '#', nav: '#', book: '#'
+  },
+  {
+    name: '空白美睫所',
+    lat: 25.0517, lng: 121.5380,
+    image: 'https://images.unsplash.com/photo-1613565438585-d90a6fa9c8a6',
+    time: '11:00 - 20:00',
+    services: '輕羽接睫 / 眼型設計',
+    reservation: 'LINE 預約',
+    region: '台北市中山區',
+    distance: '350m',
+    intro: '極簡系睫毛空間，讓妳的眼神保有純粹。',
+    ig: '#', line: '#', nav: '#', book: '#'
   }
+    ];
+    const markers = [];
 
-      // ❤️ Click heart (favorites icon) → show favorites page
-      heartBtn.addEventListener("click", () => {
-        favoriteView.style.display = "block";
-        expandedCard.style.display = "none";
-        storeCard.style.display = "block";
-        mapOverlay.style.display = "none";
-        menuOverlay.style.display = "none";
-        searchOverlay.style.display = "none";
-      });
-
-      // ☰ Click menu (hamburger icon) → show menu overlay
-      menuBtn.addEventListener("click", () => {
-        menuOverlay.style.display = "block";
-        expandedCard.style.display = "none";
-        storeCard.style.display = "block";
-        mapOverlay.style.display = "none";
-        favoriteView.style.display = "none";
-        searchOverlay.style.display = "none";
-      });
-
-      // 🏠 Click home icon → return to main map view
-      homeBtn.addEventListener("click", () => {
-        expandedCard.style.display = "none";
-        storeCard.style.display = "block";
-        mapOverlay.style.display = "none";
-        favoriteView.style.display = "none";
-        menuOverlay.style.display = "none";
-        searchOverlay.style.display = "none";
-      });
-
-      // 🔍 Click bottom search icon (same as tapping search bar) → open search overlay
-      searchBtn.addEventListener("click", () => {
-        searchOverlay.style.display = "block";
-        expandedCard.style.display = "none";
-        storeCard.style.display = "block";
-        mapOverlay.style.display = "none";
-        favoriteView.style.display = "none";
-        menuOverlay.style.display = "none";
-      });
-
-      // 點搜尋欄 (top search box) → 顯示搜尋浮窗
-      searchBox.addEventListener("click", () => {
-        searchOverlay.style.display = "block";
-        expandedCard.style.display = "none";
-        storeCard.style.display = "block";
-        mapOverlay.style.display = "none";
-        favoriteView.style.display = "none";
-        menuOverlay.style.display = "none";
-      });
-
-      // 點取消 → 關閉搜尋浮窗
-      searchClose.addEventListener("click", () => {
-        searchOverlay.style.display = "none";
-      });
-
-      // ✅ 定位按鈕邏輯 (click GPS locate icon, now at bottom nav)
-      if (locateBtn) {
-        locateBtn.addEventListener("click", () => {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-              const userLatLng = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude,
-              };
-              if (window.map) {
-                window.map.setCenter(userLatLng);
-                new google.maps.Marker({
-                  position: userLatLng,
-                  map: window.map,
-                 icon: {
-  path: google.maps.SymbolPath.CIRCLE,
-  scale: 10,
-  fillColor: "#F5A6CD",     // 主題粉紅
-  fillOpacity: 1,
-  strokeWeight: 1,
-  strokeColor: "#D08DAE"    // hover 粉邊
-},
-                  title: "你的位置",
-                });
-              } else {
-                alert("地圖尚未初始化，無法定位");
-              }
-            }, () => {
-              alert("無法取得你的位置，請確認裝置權限");
-            });
-          } else {
-            alert("此裝置不支援定位功能");
+    function initMap() {
+      navigator.geolocation.getCurrentPosition(pos => {
+        const userPos = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude
+        };
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: userPos, zoom: 14,
+        });
+        userMarker = new google.maps.Marker({
+          position: userPos,
+          map: map,
+          title: '你在這裡',
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 8,
+            fillColor: '#4285F4',
+            fillOpacity: 1,
+            strokeWeight: 2,
+            strokeColor: '#fff'
           }
         });
-      }
-    };
-  </script>
+        stores.forEach((store, index) => {
+          const marker = new google.maps.Marker({
+            position: { lat: store.lat, lng: store.lng },
+            map: map,
+            title: store.name
+          });
+          markers.push(marker);
+        });
+        renderCards();
+        updateCardUI(0);
+        // 🔁 滑動卡片時自動偵測對應卡片，並更新地圖中心與資料
+document.getElementById('cardWrapper').addEventListener('scroll', function () {
+  const wrapper = this;
+  const cards = wrapper.querySelectorAll('.store-card');
+  let minDistance = Infinity;
+  let closestIndex = 0;
 
-  <!-- ✅ Initialize Google Map -->
-  <script>
-    function initMap() {
-      const center = { lat: 25.034, lng: 121.564 };
-      window.map = new google.maps.Map(document.getElementById("map"), {
-        center,
-        zoom: 15,
-        disableDefaultUI: true
+  cards.forEach((card, index) => {
+    const cardCenter = card.getBoundingClientRect().left + card.offsetWidth / 2;
+    const wrapperCenter = wrapper.getBoundingClientRect().left + wrapper.offsetWidth / 2;
+    const distance = Math.abs(cardCenter - wrapperCenter);
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestIndex = index;
+    }
+  });
+
+  // 若滑動到新卡片就更新地圖位置
+  if (closestIndex !== activeIndex) {
+    updateCardUI(closestIndex);
+  }
+});
       });
     }
+
+    function renderCards() {
+      const wrapper = document.getElementById('cardWrapper');
+      stores.forEach((s, i) => {
+        const div = document.createElement('div');
+        div.className = 'store-card';
+       div.innerHTML = `
+  <div class="title">${s.name}</div>
+  <div class="info">${s.services}</div>
+  <div class="info">預約方式：${s.reservation}</div>
+  <div class="info">${s.distance}・${s.region}</div>
+`;
+        div.onclick = () => updateCardUI(i, true);
+        wrapper.appendChild(div);
+      });
+    }
+
+    function updateCardUI(index, open = false) {
+      activeIndex = index;
+      const s = stores[index];
+      document.getElementById('cardImage').src = s.image;
+      document.getElementById('cardTitle').textContent = s.name;
+      document.getElementById('cardTime').textContent = s.time;
+      document.getElementById('cardServices').textContent = s.services;
+      document.getElementById('cardAbout').textContent = s.intro;
+      document.getElementById('btnIG').href = s.ig;
+      document.getElementById('btnLine').href = s.line;
+      document.getElementById('btnNav').href = s.nav;
+      document.getElementById('btnBook').href = s.book;
+      map.panTo({ lat: s.lat, lng: s.lng });
+      if (open) document.getElementById('expandedCard').classList.add('active');
+    }
+
+    function closeExpandedCard() {
+      document.getElementById('expandedCard').classList.remove('active');
+    }
+
+   function toggleWindow(id) {
+  const target = document.getElementById(id);
+  const isOpen = target.classList.contains('active');
+
+  // 收起所有浮窗與展開卡片
+  document.querySelectorAll('.floating-window').forEach(w => w.classList.remove('active'));
+  closeExpandedCard();
+
+  // 如果原本沒開，就開；已開就收起
+  if (!isOpen) {
+    target.classList.add('active');
+  }
+}
+
+    function closeWindow(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function centerOnGPS() {
+      if (navigator.geolocation && map) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          const userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          map.setCenter(userPos);
+        });
+      }
+    }
+    // DEBUG: 強制展開第一筆卡片來確認展開卡片是否有作用
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    updateCardUI(0, true);
+  }, 1000);
+});
   </script>
-  <!-- ✅ Load Google Maps API and trigger initMap -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLCB3EKFwsIqPwEEL_hxL7zluVpnzcCNM&callback=initMap"></script>
 </body>
 </html>
