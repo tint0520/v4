@@ -237,6 +237,7 @@ let stores = []; // ✅ 真資料會從 fetch 進來
 const markers = []; // ✅ 成為全域變數
 
 function initMap() {
+  console.log("✅ initMap 已執行，地圖初始化成功");
   // ✅ 建立地圖本體
   map = new google.maps.Map(document.getElementById('map'), {
     center: { lat: 23.5, lng: 121 }, // 臺灣中心點 fallback
