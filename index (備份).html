@@ -86,6 +86,13 @@
   transition: transform 0.3s ease;
   cursor: pointer;
 }
+    .card-photo {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
     .store-card .title {
   font-weight: 700;
   font-size: 18px; /* ✅ 加大一階 */
@@ -96,69 +103,6 @@
       font-size: 14px;
       color: #7d756c;
     }
-
-<!-- 第二份貼這裡 -->
-
-
-        /* 展開卡片與浮窗 */
-    .expanded-card {
-  position: fixed;
-  bottom: 100px;
-  left: 50%;
-  transform: translateX(-50%) translateY(100%);
-  width: 90%;
-  max-width: 400px;
-  min-height: 280px; /* ✅ 可選，避免卡片太小或內容被吃掉 */
-  background: #fffefb;
-  border-radius: 20px;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
-  z-index: 2000;
-  opacity: 0;
-  transition: transform 0.4s ease, opacity 0.4s ease;
-}
-    .expanded-card.active {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-    .expanded-card img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      border-radius: 20px 20px 0 0;
-    }
-    .expanded-card .details {
-      padding: 16px;
-    }
-    .expanded-card .details h3 {
-      margin: 0 0 6px;
-      font-size: 18px;
-      color: #3e3a36;
-    }
-    .expanded-card .details p {
-      margin: 6px 0;
-      font-size: 14px;
-      color: #665d55;
-    }
-    .action-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 12px;
-    }
-    .action-buttons .icon-btn {
-      width: 48px;
-      height: 48px;
-      background: #f5f2ec;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
-    }
-    .action-buttons .icon-btn:hover {
-      transform: scale(1.08);
-    }
-
    .floating-window {
   position: fixed;
   bottom: 100px;
@@ -196,33 +140,6 @@
 </head>
 <body>
   <div id="map"></div>
-
-  <!-- 展開卡片容器 -->
-  <div id="expandedCard" class="expanded-card">
-    <img id="cardImage" src="" alt="店家照片">
-    <div class="details">
-      <h3 id="cardTitle">店名</h3>
-      <p id="cardTime">營業時間</p>
-      <p id="cardServices">服務項目</p>
-      <p id="cardAbout">店家介紹</p>
-      <div class="action-buttons">
-        <a id="btnLine" class="icon-btn" target="_blank" title="LINE">
-          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#7f7263" fill="none" stroke-width="2"><path d="M3 12a9 9 0 0118 0c0 4.418-3.582 8-8 8h-1l-4 2v-2H8a9 9 0 01-5-8z"/></svg>
-        </a>
-        <a id="btnIG" class="icon-btn" target="_blank" title="Instagram">
-          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#7f7263" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17" y1="7" x2="17" y2="7"/></svg>
-        </a>
-        <a id="btnNav" class="icon-btn" target="_blank" title="導航">
-          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#7f7263" fill="none" stroke-width="2"><polygon points="12 2 19 21 12 17 5 21 12 2"/></svg>
-        </a>
-        <a id="btnBook" class="icon-btn" target="_blank" title="立即預約">
-          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#7f7263" fill="none" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 10h16"/></svg>
-        </a>
-      </div>
-    </div>
-  </div>
-
-<!-- 第三份貼這裡 -->
 
 
     <!-- 店家卡片滑動容器 -->
@@ -624,10 +541,12 @@ document.getElementById('cardWrapper').addEventListener('scroll', function () {
       stores.forEach((s, i) => {
         const div = document.createElement('div');
         div.className = 'store-card';
-       div.innerHTML = `
+div.innerHTML = `
+ <img src="${s.image}" class="card-photo" />
   <div class="title">${s.name}</div>
-  <div class="info">${s.services}</div>
-  <div class="info">預約方式：${s.reservation}</div>
+  <div class="info">時間：${s.time}</div>
+  <div class="info">服務：${s.services}</div>
+  <div class="info">預約：${s.reservation}</div>
   <div class="info">${s.distance}・${s.region}</div>
 `;
         div.onclick = () => updateCardUI(i, true);
@@ -638,34 +557,13 @@ document.getElementById('cardWrapper').addEventListener('scroll', function () {
     function updateCardUI(index, open = false) {
       activeIndex = index;
       const s = stores[index];
-      document.getElementById('cardImage').src = s.image;
-      document.getElementById('cardTitle').textContent = s.name;
-      document.getElementById('cardTime').textContent = s.time;
-      document.getElementById('cardServices').textContent = s.services;
-      document.getElementById('cardAbout').textContent = s.intro;
-      document.getElementById('btnIG').href = s.ig;
-      document.getElementById('btnLine').href = s.line;
-      document.getElementById('btnNav').href = s.nav;
-      document.getElementById('btnBook').href = s.book;
       map.panTo({ lat: s.lat, lng: s.lng });
- if (open) {
-  console.log('✅ 展開卡片觸發：index =', index); // 👈 加這一行！
-  const card = document.getElementById('expandedCard');
-  card.classList.remove('active');
-  setTimeout(() => card.classList.add('active'), 10);
-}
-} // ✅ ←←← 你只要補這一行，就一切正常！
-    function closeExpandedCard() {
-      document.getElementById('expandedCard').classList.remove('active');
-    }
+
+} 
 
    function toggleWindow(id) {
   const target = document.getElementById(id);
   const isOpen = target.classList.contains('active');
-
-  // 收起所有浮窗與展開卡片
-  document.querySelectorAll('.floating-window').forEach(w => w.classList.remove('active'));
-  closeExpandedCard();
 
   // 如果原本沒開，就開；已開就收起
   if (!isOpen) {
@@ -688,22 +586,10 @@ document.getElementById('cardWrapper').addEventListener('scroll', function () {
     // DEBUG: 強制展開第一筆卡片來確認展開卡片是否有作用
 window.addEventListener('load', () => {
   setTimeout(() => {
-    updateCardUI(0, true);
+    updateCardUI(0);
   }, 1000);
 });
-const expandedCard = document.getElementById('expandedCard');
-let startY = 0;
 
-expandedCard.addEventListener('touchstart', (e) => {
-  startY = e.touches[0].clientY;
-});
-
-expandedCard.addEventListener('touchend', (e) => {
-  const endY = e.changedTouches[0].clientY;
-  if (endY - startY > 60) {
-    closeExpandedCard();
-  }
-});
     
   </script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLCB3EKFwsIqPwEEL_hxL7zluVpnzcCNM&callback=initMap"></script>
