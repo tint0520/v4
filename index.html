@@ -254,22 +254,24 @@ navigator.geolocation.getCurrentPosition(pos => {
           : `${(distanceMeters / 1000).toFixed(1)}km`;
 
         return {
-          name: row.name,
-          lat: parseFloat(row.lat),
-          lng: parseFloat(row.lng),
-          image: row.image,
-          time: row.time,
-          services: row.services,
-          reservation: row.reservation,
-          region: row.region,
-          distance: distanceText
-        };
+            name: row.name,
+            lat: parseFloat(row.lat),
+            lng: parseFloat(row.lng),
+            image: row.image,
+            time: row.time,
+            services: row.services,
+            reservation: row.reservation,
+            region: row.region,
+            distance: distanceText
+          };
+        });
+        initMap({ lat: userLat, lng: userLng });
       });
-
-      initMap({ lat: userLat, lng: userLng }); // ✅ 放這邊沒錯
-    }); // ✅ 補齊 fetch 的括號
-});
-  
+  },
+  err => {
+    alert("⚠️ 無法取得您的定位，請開啟 GPS 或允許權限");
+  }
+);
 
     function initMap(userPos) {
         map = new google.maps.Map(document.getElementById('map'), {
