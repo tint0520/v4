@@ -245,7 +245,6 @@ function centerMapAndPan(pos) {
     map.panBy(0, mapHeight / 3);
   });
 }
-
 // ✅ 地圖初始化
 window.initMap = function () {
   console.log("✅ initMap 已啟動");
@@ -256,6 +255,9 @@ window.initMap = function () {
       const userLng = pos.coords.longitude;
       console.log("📍 成功取得 GPS 位置：", userLat, userLng);
       processData(userLat, userLng);
+
+      // ✅ ⬇️ 這行是加的：自動移動地圖到 GPS 位置
+      centerMapAndPan({ lat: userLat, lng: userLng });
     },
     (err) => {
       console.warn("❌ 無法取得定位：", err.message);
@@ -264,6 +266,9 @@ window.initMap = function () {
       const fallbackLat = 25.033968;
       const fallbackLng = 121.564468;
       processData(fallbackLat, fallbackLng);
+
+      // ✅ ⬇️ fallback 時也一樣幫地圖移過去
+      centerMapAndPan({ lat: fallbackLat, lng: fallbackLng });
     }
   );
 };
