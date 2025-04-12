@@ -612,7 +612,7 @@ document.getElementById('cardWrapper').addEventListener('scroll', function () {
 
   // 若滑動到新卡片就更新地圖位置
   if (closestIndex !== activeIndex) {
-    updateCardUI(closestIndex);
+    updateCardUI(closestIndex, true);
   }
 });
       });
