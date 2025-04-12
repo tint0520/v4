@@ -590,7 +590,7 @@ div.innerHTML = `
       activeIndex = index;
       const s = stores[index];
       // 地圖偏移，讓標記點落在畫面偏上方的位置（避免被卡片遮住）
-  const offsetLat = 0.02; // 可依需求調整：0.002 ~ 0.005 都可試
+  const offsetLat = 0.0005; // 可依需求調整：0.002 ~ 0.005 都可試
   map.panTo({
     lat: s.lat + offsetLat,
     lng: s.lng
@@ -619,7 +619,7 @@ div.innerHTML = `
         lng: pos.coords.longitude
       };
 
-      const offsetLat = 0.02; // ✅ 同樣往上偏移
+      const offsetLat = 0.0005; // ✅ 同樣往上偏移
       map.panTo({
         lat: userPos.lat + offsetLat,
         lng: userPos.lng
