@@ -25,13 +25,14 @@
       background-color: #fefcf9;
     }
     #map {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      right: 0;
-      left: 0;
-      z-index: 1;
-    }
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 100%; /* 💥 關鍵就在這行 */
+  z-index: 1;
+}
     .bottom-nav {
   position: fixed;
   bottom: 20px;
