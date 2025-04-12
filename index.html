@@ -237,7 +237,16 @@ let map, userMarker, activeIndex = 0;
 let stores = [];
 const markers = [];
 
-// 🧠 ✅ 第1段：initMap() 與 processData()
+// ✅ [新增] 共用地圖移動函式（提供 GPS 跟卡片共用）
+function centerMapAndPan(pos) {
+  map.setCenter(pos);
+  google.maps.event.addListenerOnce(map, "idle", function () {
+    const mapHeight = document.getElementById("map").offsetHeight;
+    map.panBy(0, mapHeight / 3);
+  });
+}
+
+// ✅ 地圖初始化
 window.initMap = function () {
   console.log("✅ initMap 已啟動");
 
@@ -286,7 +295,7 @@ function processData(userLat, userLng) {
       console.log("📦 抓到 Google Sheet 筆數：", data.length);
 
       stores = data
-        .filter((row) => row.lat && row.lng) // ✅ 過濾空資料
+        .filter((row) => row.lat && row.lng)
         .map((row) => {
           const distanceMeters = getDistance(
             userLat,
@@ -357,7 +366,17 @@ function processData(userLat, userLng) {
     });
 }
 
-// 🧠 ✅ 第2段：renderCards 與 updateCardUI
+// ✅ [覆蓋] 卡片點擊邏輯 → 改用共用地圖控制邏輯
+function updateCardUI(index) {
+  if (!stores[index]) return;
+
+  activeIndex = index;
+  const s = stores[index];
+  const storePos = { lat: s.lat, lng: s.lng };
+
+  centerMapAndPan(storePos); // ✅ 套用跟 GPS 相同邏輯
+}
+
 function renderCards() {
   const wrapper = document.getElementById("cardWrapper");
   wrapper.innerHTML = "";
@@ -378,32 +397,7 @@ function renderCards() {
   });
 }
 
-function updateCardUI(index) {
-  if (!stores[index]) {
-    console.warn("⚠️ 無對應店家資料，無法更新卡片");
-    return;
-  }
-
-  activeIndex = index;
-  const s = stores[index];
-
-  // ✅ 這行確保地圖容器有畫面（防止地圖變灰）
-  google.maps.event.trigger(map, "resize");
-
-  // ✅ 改為先 setCenter，等 idle 再 panBy
-  map.setCenter({ lat: s.lat, lng: s.lng });
-
-  google.maps.event.clearListeners(map, "idle");
-
-  google.maps.event.addListenerOnce(map, "idle", function () {
-    setTimeout(() => {
-      const mapHeight = document.getElementById("map").offsetHeight;
-      map.panBy(0, mapHeight / 3);
-    }, 10);
-  });
-}
-
-// 🧠 ✅ 第3段：按鈕邏輯
+// ✅ [覆蓋] GPS 定位按鈕邏輯 → 改用共用函式
 function centerOnGPS() {
   if (navigator.geolocation && map) {
     navigator.geolocation.getCurrentPosition(
@@ -412,11 +406,9 @@ function centerOnGPS() {
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
         };
-        map.setCenter(userPos);
-        google.maps.event.addListenerOnce(map, "idle", function () {
-          const mapHeight = document.getElementById("map").offsetHeight;
-          map.panBy(0, mapHeight / 3);
-        });
+
+        centerMapAndPan(userPos); // ✅ 共用函式
+
         if (userMarker) {
           userMarker.setPosition(userPos);
         } else {
@@ -458,14 +450,12 @@ function closeWindow(id) {
   document.getElementById(id).classList.remove("active");
 }
 
-// ✅ 頁面載入後自動觸發第一筆卡片
 window.addEventListener("load", () => {
   setTimeout(() => {
     updateCardUI(0);
-  }, 2000);
+  }, 1000);
 });
 
-// ✅ 📏 getDistance 計算距離用的函式
 function getDistance(lat1, lng1, lat2, lng2) {
   const R = 6371000;
   const dLat = (lat2 - lat1) * Math.PI / 180;
