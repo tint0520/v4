@@ -338,30 +338,32 @@ function processData(userLat, userLng) {
       renderCards();
       updateCardUI(0);
 
-    document
-  .getElementById("cardWrapper")
-  .addEventListener("scroll", function () {
-    const wrapper = this;
-    const cards = wrapper.querySelectorAll(".store-card");
-    let minDistance = Infinity;
-    let closestIndex = 0;
+   document
+        .getElementById("cardWrapper")
+        .addEventListener("scroll", function () {
+          const wrapper = this;
+          const cards = wrapper.querySelectorAll(".store-card");
+          let minDistance = Infinity;
+          let closestIndex = 0;
 
-    cards.forEach((card, index) => {
-      const cardCenter =
-        card.getBoundingClientRect().left + card.offsetWidth / 2;
-      const wrapperCenter =
-        wrapper.getBoundingClientRect().left + wrapper.offsetWidth / 2;
-      const distance = Math.abs(cardCenter - wrapperCenter);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIndex = index;
-      }
-    });
+          cards.forEach((card, index) => {
+            const cardCenter =
+              card.getBoundingClientRect().left + card.offsetWidth / 2;
+            const wrapperCenter =
+              wrapper.getBoundingClientRect().left +
+              wrapper.offsetWidth / 2;
+            const distance = Math.abs(cardCenter - wrapperCenter);
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestIndex = index;
+            }
+          });
 
-    if (closestIndex !== activeIndex) {
-      updateCardUI(closestIndex); // ✅ 卡片滑動時自動移動地圖
-    }
-  });
+          if (closestIndex !== activeIndex) {
+            updateCardUI(closestIndex);
+          }
+        });
+    })
     .catch((err) => {
       alert("❌ 資料載入失敗，請檢查 Google Sheet 權限或網路問題");
       console.error(err);
