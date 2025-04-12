@@ -542,11 +542,11 @@ document.getElementById('cardWrapper').addEventListener('scroll', function () {
         const div = document.createElement('div');
         div.className = 'store-card';
 div.innerHTML = `
-  <img src="${s.image}" class="card-photo" />
+ <img src="${s.image}" class="card-photo" />
   <div class="title">${s.name}</div>
-  <div class="info">${s.region}・${s.distance}</div>
-  <div class="info">${s.services}</div>
-  <div class="info">預約方式：${s.reservation}</div>
+  <div class="info">服務：${s.services}</div>
+  <div class="info">預約：${s.reservation}</div>
+  <div class="info">${s.distance}・${s.region}</div>
 `;
         div.onclick = () => updateCardUI(i, true);
         wrapper.appendChild(div);
