@@ -265,10 +265,9 @@
 
     initMap({ lat: userLat, lng: userLng }); // ✅ 就貼在這裡
   });
-    
     const markers = [];
 
-    function initMap() {
+    function initMap(userPos) {
         map = new google.maps.Map(document.getElementById('map'), {
           center: userPos, zoom: 14,
           mapTypeControl: false  // ✅ 關閉右上角圖層控制（地圖/衛星）
