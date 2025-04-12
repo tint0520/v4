@@ -142,11 +142,13 @@
   position: absolute;
   top: 20px;
   right: 20px;
+  width: 48px;
+  height: 48px;
   background: #ffffff;
   border: none;
   border-radius: 50%;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  padding: 5px;
+  padding: 6px; /* 你可以調整這個來讓 icon 不太貼邊 */
   z-index: 999;
   cursor: pointer;
   transition: background 0.3s ease;
@@ -155,13 +157,20 @@
 .gps-btn:hover {
   background: #f2f2f2;
 }
+
+.gps-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
     
   </style>
 </head>
 <body>
   <div id="map"></div>
-<button id="gpsButton" class="gps-btn" onclick="centerOnGPS()" title="定位到我">
-  <img src="./img/icon_gps.png" alt="定位" width="38" height="38" />
+<button class="gps-btn" onclick="centerOnGPS()" title="定位到我">
+  <img src="./img/icon_gps.png" class="gps-icon" alt="定位" />
 </button>
 
     <!-- 店家卡片滑動容器 -->
