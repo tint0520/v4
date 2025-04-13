@@ -337,8 +337,14 @@ function processData(userLat, userLng) {
         markers.push(marker);
       });
 
-      renderCards();
-      updateCardUI(0);
+renderCards();
+updateCardUI(0);
+
+// ✅ 等地圖畫完（idle）後移除 loading 畫面
+google.maps.event.addListenerOnce(map, 'idle', () => {
+  console.log("✅ 地圖完成渲染，隱藏 loading 畫面");
+  document.getElementById("loadingScreen").style.display = "none";
+});
 
    document
         .getElementById("cardWrapper")
@@ -474,6 +480,40 @@ function getDistance(lat1, lng1, lat2, lng2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
+  <!-- ✅ Loading 畫面 -->
+<div id="loadingScreen" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: #fefcf9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-size: 18px;
+  color: #a78d6a;
+  font-family: 'Noto Sans TC', sans-serif;
+">
+  <div>
+    <div class="spinner" style="
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #a78d6a;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
+    "></div>
+    載入地圖中...
+  </div>
+</div>
+
+<style>
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLCB3EKFwsIqPwEEL_hxL7zluVpnzcCNM&callback=initMap"></script>
 </body>
