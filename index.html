@@ -342,8 +342,9 @@ updateCardUI(0);
 
 // ✅ 等地圖畫完（idle）後移除 loading 畫面
 google.maps.event.addListenerOnce(map, 'idle', () => {
-  console.log("✅ 地圖完成渲染，隱藏 loading 畫面");
-  document.getElementById("loadingScreen").style.display = "none";
+  setTimeout(() => {
+    document.getElementById("loadingScreen").style.display = "none";
+  }, 500); // ✅ 等地圖 idle 後再延遲 300ms 消失
 });
 
    document
