@@ -236,7 +236,18 @@ const SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
 let map, userMarker, activeIndex = 0;
 let stores = [];
 const markers = [];
- 
+
+// ✅ 紅點與藍點 icon 樣式
+const defaultIcon = {
+  url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+  scaledSize: new google.maps.Size(30, 30)
+};
+
+const activeIcon = {
+  url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+  scaledSize: new google.maps.Size(40, 40)
+};
+  
 // ✅ [新增] 共用地圖移動函式（提供 GPS 跟卡片共用）
 function centerMapAndPan(pos) {
   console.log("🗺️ 地圖 setCenter 到：", pos); // ✅ 加這行
@@ -333,6 +344,7 @@ function processData(userLat, userLng) {
           position: { lat: store.lat, lng: store.lng },
           map: map,
           title: store.name,
+           icon: defaultIcon // ✅ 一開始是紅色小點
         });
         markers.push(marker);
       });
@@ -372,6 +384,13 @@ function processData(userLat, userLng) {
     });
 }
 
+
+  // ✅ 這段是紅點高亮函式，請貼在 updateCardUI 上面
+function highlightMarker(index) {
+  markers.forEach((marker, i) => {
+    marker.setIcon(i === index ? activeIcon : defaultIcon);
+  });
+}
 // ✅ [覆蓋] 卡片點擊邏輯 → 改用共用地圖控制邏輯
 function updateCardUI(index) {
   if (!stores[index]) return;
@@ -381,6 +400,7 @@ function updateCardUI(index) {
   const storePos = { lat: s.lat, lng: s.lng };
 
   centerMapAndPan(storePos); // ✅ 套用跟 GPS 相同邏輯
+   highlightMarker(index);          // ✅ 紅點變藍、其他變回紅
 }
 
 function renderCards() {
