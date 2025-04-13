@@ -240,6 +240,7 @@ const markers = [];
 // ✅ [新增] 共用地圖移動函式（提供 GPS 跟卡片共用）
 function centerMapAndPan(pos) {
   console.log("🗺️ 地圖 setCenter 到：", pos); // ✅ 加這行
+  map.setZoom(16); // ✅ 調整地圖視野加這行
   map.setCenter(pos);
   google.maps.event.addListenerOnce(map, "idle", function () {
     const mapHeight = document.getElementById("map").offsetHeight;
