@@ -480,7 +480,9 @@ function getDistance(lat1, lng1, lat2, lng2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
-  <!-- ✅ Loading 畫面 -->
+</script>
+
+<!-- ✅ Loading 畫面（放在 <body> 裡） -->
 <div id="loadingScreen" style="
   position: fixed;
   top: 0; left: 0;
@@ -508,7 +510,7 @@ function getDistance(lat1, lng1, lat2, lng2) {
   </div>
 </div>
 
-<!-- ✅ 動畫樣式（注意：請不要放在 <script> 裡） -->
+<!-- ✅ spinner 動畫樣式 -->
 <style>
   @keyframes spin {
     0% { transform: rotate(0deg); }
@@ -516,7 +518,7 @@ function getDistance(lat1, lng1, lat2, lng2) {
   }
 </style>
 
-<!-- ✅ Google Maps 載入 -->
+<!-- ✅ Google Maps 載入 Script：保持在頁尾，確保 initMap 已定義 -->
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLCB3EKFwsIqPwEEL_hxL7zluVpnzcCNM&callback=initMap"></script>
 </body>
 </html>
