@@ -342,11 +342,37 @@ updateCardUI(0);
 
 // ✅ 等地圖畫完（idle）後移除 loading 畫面
 google.maps.event.addListenerOnce(map, 'idle', () => {
-  setTimeout(() => {
-    document.getElementById("loadingScreen").style.display = "none";
-  }, 500); // ✅ 等地圖 idle 後再延遲 300ms 消失
-});
+  // ✅ 當地圖 idle 後，開始監聽所有圖片載入
+  const images = document.querySelectorAll('.store-card img');
+  let loadedCount = 0;
 
+  if (images.length === 0) {
+    document.getElementById("loadingScreen").style.display = "none";
+    return;
+  }
+
+  images.forEach((img) => {
+    if (img.complete) {
+      loadedCount++;
+    } else {
+      img.onload = img.onerror = () => {
+        loadedCount++;
+        if (loadedCount === images.length) {
+          setTimeout(() => {
+            document.getElementById("loadingScreen").style.display = "none";
+          }, 300); // ✅ 加一點點緩衝，畫面更順
+        }
+      };
+    }
+  });
+
+  // ✅ 如果所有圖片都已載入完成（不用等 onload）
+  if (loadedCount === images.length) {
+    setTimeout(() => {
+      document.getElementById("loadingScreen").style.display = "none";
+    }, 300);
+  }
+});
    document
         .getElementById("cardWrapper")
         .addEventListener("scroll", function () {
